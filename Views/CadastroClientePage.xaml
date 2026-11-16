@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:CadastroClientes.Behaviors"
+             x:Class="CadastroClientes.Views.CadastroClientePage"
+             Shell.NavBarIsVisible="False"
+             Title="Cadastro Cliente"
+             BackgroundColor="#16315e">
+
+    <Grid RowDefinitions="Auto,*">
+        <Label
+            x:Name="lblTitulo"
+            Text="Cadastro de Cliente"
+            FontSize="30"
+            FontAttributes="Bold"
+            TextColor="White"
+            Margin="0,30,0,0"
+            Grid.Row="0"
+            HorizontalOptions="Center"/>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout x:Name="Formulario" Padding="50" Spacing="10">
+
+                <Grid
+                    x:Name="GridCampos"
+                    ColumnDefinitions="*,*,*,*,*,*,*,*,*,*,*,*"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                    ColumnSpacing="10"
+                    RowSpacing="25">
+
+                    <!-- Linha 0 -->
+                    <VerticalStackLayout x:Name="cOs" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="OS" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eOs" Style="{StaticResource EntryCampo}" Placeholder="OS" IsEnabled="False" BackgroundColor="LightGray" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cExterno" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" Spacing="5">
+                        <Label Text="Externo" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbExterno" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+
+                    <!-- Linha 1 -->
+                    <VerticalStackLayout x:Name="cNome" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" Spacing="5">
+                        <Label Text="Nome Completo*" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eNome" Style="{StaticResource EntryCampo}" Placeholder="Nome" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cTelefone" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Telefone*" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eTelefone"
+                               Style="{StaticResource EntryCampo}"
+                               Keyboard="Telephone"
+                               Placeholder="(11) 11111-1111">
+                                <Entry.Behaviors>
+                                    <behaviors:MascaraBehavior Tipo="Telefone" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cEmissao" Grid.Row="6" Grid.Column="8" Grid.ColumnSpan="4" Spacing="5">
+                        <Label Text="Data Emissão*" Style="{StaticResource LabelCampo}" />
+                        <Border x:Name="bEmissao" Style="{StaticResource BordaCampo}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+
+                                <Entry x:Name="eEmissao" Style="{StaticResource EntryCampo}" Keyboard="Numeric" Placeholder="dd/mm/aaaa" 
+                                       TextChanged="OnDataTextChanged" Margin="50,0,0,0">
+                                    <Entry.Behaviors>
+                                        <behaviors:MascaraBehavior Tipo="Data" />
+                                    </Entry.Behaviors>
+                                </Entry>
+
+                                <Grid Grid.Column="1" WidthRequest="40" IsClippedToBounds="True">
+                                    <Label x:Name="lblIconeData" Text="📅" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                    <DatePicker x:Name="pEmissao" Opacity="0" DateSelected="OnDataSelecionada" />
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Linha 2 -->
+                    <VerticalStackLayout x:Name="cEndereco" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Spacing="5">
+                        <Label Text="Endereço" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eEndereco" Style="{StaticResource EntryCampo}" Placeholder="Endereço" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cBairro" Grid.Row="2" Grid.Column="8" Grid.ColumnSpan="4" Spacing="5">
+                        <Label Text="Bairro" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eBairro" Style="{StaticResource EntryCampo}" Placeholder="Bairro" />
+                        </Border>
+                    </VerticalStackLayout>
+                    
+                    <!-- Linha 3 -->
+                    <VerticalStackLayout x:Name="cCidade" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Spacing="5">
+                        <Label Text="Cidade*" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Picker x:Name="pCidade" Style="{StaticResource PickerCampo}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cCep" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="CEP" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eCep" Style="{StaticResource EntryCampo}" Placeholder="00000-000" Keyboard="Numeric" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cAparelho" Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Aparelho*" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Picker x:Name="pAparelho" Style="{StaticResource PickerCampo}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cCodigo" Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Código" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eCodigo" Style="{StaticResource EntryCampo}" Placeholder="Código" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cSerie" Grid.Row="3" Grid.Column="8" Grid.ColumnSpan="5" Spacing="5">
+                        <Label Text="Nro Série" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eSerie" Style="{StaticResource EntryCampo}" Placeholder="Nro Série" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Linha 4 -->
+                    <VerticalStackLayout x:Name="cDefeito" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="12" Spacing="5">
+                        <Label Text="Defeito" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Editor x:Name="eDefeito" Placeholder="Defeito" HeightRequest="100" AutoSize="Disabled" TextColor="#0F172A" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Linha 5 -->
+                    <VerticalStackLayout x:Name="cCondAparelho" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="12" Spacing="5">
+                        <Label Text="Condição do Aparelho" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eCondAparelho" Style="{StaticResource EntryCampo}" Placeholder="Condição do Aparelho" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Linha 6 -->
+                    <VerticalStackLayout x:Name="cGarantia" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Garantia" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbGarantia" CheckedChanged="onGarantia_Changed" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cRevenda" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Revenda" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eRevenda" Style="{StaticResource EntryCampo}" Placeholder="Revenda" IsEnabled="False" BackgroundColor="LightGray" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cNroNf" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="4" Spacing="5">
+                        <Label Text="Número NF" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eNroNf" Style="{StaticResource EntryCampo}" Placeholder="Número NF" IsEnabled="False" BackgroundColor="LightGray"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cCompra" Grid.Row="6" Grid.Column="8" Grid.ColumnSpan="4" Spacing="5">
+                        <Label Text="Data Compra*" Style="{StaticResource LabelCampo}" />
+                        <Border x:Name="bCompra" Style="{StaticResource BordaCampo}" BackgroundColor="LightGray">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+
+                                <Entry x:Name="eCompra" Style="{StaticResource EntryCampo}" Keyboard="Numeric" Placeholder="dd/mm/aaaa" 
+                                       IsEnabled="False" TextChanged="OnDataTextChanged" Margin="50,0,0,0">
+                                    <Entry.Behaviors>
+                                        <behaviors:MascaraBehavior Tipo="Data" />
+                                    </Entry.Behaviors>
+                                </Entry>
+
+                                <Grid Grid.Column="1" WidthRequest="40" IsClippedToBounds="True">
+                                    <Label x:Name="lblIconeCompra" Text="📅" FontSize="15" Opacity="0.4" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                    <DatePicker x:Name="pCompra" Opacity="0" IsEnabled="False" DateSelected="OnDataSelecionada" />
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Linha 7 -->
+                    <VerticalStackLayout x:Name="cCabo" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Cabo AC" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbCabo" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cControle" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Controle" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbControle" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cBase" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Base" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbBase" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cSuporte" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Suporte" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbSuporte" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cCaixaAc" Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Caixa Acust" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbCaixaAc" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cOutroAcess" Grid.Row="7" Grid.Column="5" Grid.ColumnSpan="6" Spacing="5">
+                        <Label Text="Outro Acessório" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eOutroAcess" Style="{StaticResource EntryCampo}" Placeholder="Outro Acessório" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Botões -->
+                    <HorizontalStackLayout x:Name="cBotoes" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="12" HorizontalOptions="End" Spacing="15">
+
+                        <Button Text="Cadastrar" Style="{StaticResource BotaoAzul}" Clicked="OnCadastrarClicked" />
+
+                        <Button Text="Voltar" Style="{StaticResource BotaoVermelho}" Clicked="OnVoltarClicked" />
+                        
+                    </HorizontalStackLayout>
+
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

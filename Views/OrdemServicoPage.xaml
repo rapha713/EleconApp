@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:CadastroClientes.Behaviors"
+             x:Class="CadastroClientes.Views.OrdemServicoPage"
+             Shell.NavBarIsVisible="False"
+             Title="Ordem de Serviço">
+    
+    <ContentPage.Resources>
+        <Style x:Key="BordaMenu" TargetType="Border">
+            <Setter Property="Stroke" Value="#c9c9c9" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape">
+                <Setter.Value>
+                    <RoundRectangle CornerRadius="8" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BotaoMenu" TargetType="Button" BasedOn="{StaticResource BotaoAzul}">
+            <Setter Property="BackgroundColor" Value="#fff" />
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#fff" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#c9c9c9" />
+                                <Setter Property="TextColor" Value="Black" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#757575" />
+                                <Setter Property="TextColor" Value="White" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
+        <ColumnDefinitionCollection x:Key="ColunasTabela">
+            <ColumnDefinition Width="70" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="200" />
+        </ColumnDefinitionCollection>
+    </ContentPage.Resources>
+
+    <Grid x:Name="Raiz">
+
+        <Grid
+            x:Name="Conteudo"
+            Padding="30"
+            RowDefinitions="Auto, *"
+            RowSpacing="24"
+            BackgroundColor="#16315e">
+
+            <Grid Grid.Row="0" RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="10" RowSpacing="12">
+
+                <!-- Linha 0 -->
+                <Image
+                    x:Name="Logo"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Source="logoelecon.png"
+                    Aspect="AspectFit"
+                    HeightRequest="80"
+                    HorizontalOptions="Start" />
+
+                <Border x:Name="cBotaoVoltar" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource BordaMenu}" 
+                       HorizontalOptions="End" VerticalOptions="Center">
+                    <Button Text="Voltar" FontAttributes="Bold" Style="{StaticResource BotaoMenu}" Clicked="btnVoltarClicked" />
+                </Border>
+
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Text="Filtros"
+                    FontSize="28"
+                    FontAttributes="Bold"
+                    TextColor="White" />
+
+                <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource BordaCampo}">
+                    <Picker x:Name="pFiltros" Style="{StaticResource PickerCampo}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>OS</x:String>
+                                <x:String>Nome</x:String>
+                                <x:String>Telefone</x:String>
+                                <x:String>Andamento</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="1"    Style="{StaticResource BordaCampo}">
+                    <Entry x:Name="eFiltros" Style="{StaticResource EntryCampo}" Placeholder="Digite para pesquisar..." />
+                </Border>
+
+                <Border x:Name="cBotaoImprimirFiltrados" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="1" Style="{StaticResource BordaMenu}" 
+                    HorizontalOptions="End" VerticalOptions="Center">
+                    <Button Text="Imprimir OS filtradas" FontAttributes="Bold" Style="{StaticResource BotaoMenu}" />
+                </Border>
+            </Grid>
+
+            <Border
+                Grid.Row="1"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                Padding="20">
+
+                <Grid RowDefinitions="Auto,*" RowSpacing="0">
+
+                    <!-- Cabeçalho -->
+                    <Grid
+                        Grid.Row="0"
+                        ColumnDefinitions="{StaticResource ColunasTabela}"
+                        BackgroundColor="#F1F5F9"
+                        Padding="10,12">
+
+                        <Label Grid.Column="0" Text="OS" FontAttributes="Bold" TextColor="#0F172A" HorizontalOptions="Center" />
+                        <Label Grid.Column="1" Text="Nome" FontAttributes="Bold" TextColor="#0F172A" HorizontalOptions="Center" />
+                        <Label Grid.Column="2" Text="Telefone" FontAttributes="Bold" TextColor="#0F172A" HorizontalOptions="Center" />
+                        <Label Grid.Column="3" Text="Andamento" FontAttributes="Bold" TextColor="#0F172A" HorizontalOptions="Center" />
+                        <Label Grid.Column="4" Text="Data Emissão" FontAttributes="Bold" TextColor="#0F172A" HorizontalOptions="Center" />
+                        <Label Grid.Column="5" Text="Ações" FontAttributes="Bold" TextColor="#0F172A" HorizontalOptions="Center" />
+                    </Grid>
+
+                    <CollectionView
+                        x:Name="cvClientes"
+                        Grid.Row="1"
+                        SelectionMode="None"
+                        EmptyView="Nenhum cliente cadastrado.">
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <VerticalStackLayout>
+
+                                    <Grid ColumnDefinitions="{StaticResource ColunasTabela}" Padding="10,8" ColumnSpacing="0">
+
+                                        <Label Grid.Column="0" Text="{Binding OS}" VerticalOptions="Center" TextColor="#000" HorizontalOptions="Center" />
+                                        <BoxView Grid.Column="0" WidthRequest="2" Color="#E2E8F0" HorizontalOptions="End" />
+
+                                        <Label Grid.Column="1" Text="{Binding Nome}" VerticalOptions="Center" TextColor="#000"
+                                               LineBreakMode="TailTruncation" HorizontalOptions="Center" />
+                                        <BoxView Grid.Column="1" WidthRequest="2" Color="#E2E8F0" HorizontalOptions="End" />
+
+                                        <Label Grid.Column="2" Text="{Binding Telefone, Converter={StaticResource MascaraConverter}, ConverterParameter=Telefone}"
+                                                HorizontalOptions="Center" VerticalOptions="Center" TextColor="#000" />
+                                        <BoxView Grid.Column="2" WidthRequest="2" Color="#E2E8F0" HorizontalOptions="End" />
+
+                                        <Label Grid.Column="3" Text="{Binding Andamento}" VerticalOptions="Center" TextColor="#000" HorizontalOptions="Center" />
+                                        <BoxView Grid.Column="3" WidthRequest="2" Color="#E2E8F0" HorizontalOptions="End" />
+
+                                        <Label Grid.Column="4" Text="{Binding DtaEmissao, Converter={StaticResource MascaraConverter}, ConverterParameter=Data}" 
+                                               HorizontalOptions="Center" VerticalOptions="Center" TextColor="#000" />
+                                        <BoxView Grid.Column="4" WidthRequest="2" Color="#E2E8F0" HorizontalOptions="End" />
+
+                                        <HorizontalStackLayout Grid.Column="5" Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Button Text="Editar" Style="{StaticResource BotaoAzul}" Clicked="btnEditarClicked" />
+
+                                            <Button Text="Imprimir" Margin="-5,0,-5,0" Style="{StaticResource BotaoImprimir}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <BoxView HeightRequest="2" Color="#E2E8F0" />
+
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Grid>
+       
+</ContentPage>

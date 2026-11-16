@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:CadastroClientes.Behaviors"
+             x:Class="CadastroClientes.Views.EditarOsPage"
+             Shell.NavBarIsVisible="False"
+             Title="Editar OS"
+             BackgroundColor="#16315e">
+
+    <ContentPage.Resources>
+        <ColumnDefinitionCollection x:Key="ColunasTabela">
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </ColumnDefinitionCollection>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <Label
+            x:Name="lblTitulo"
+            Text="Ordem de Serviço"
+            FontSize="30"
+            FontAttributes="Bold"
+            TextColor="White"
+            Margin="0,30,0,0"
+            Grid.Row="0"
+            HorizontalOptions="Center"/>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout x:Name="Campos" Padding="50" Spacing="10">
+
+                <Grid
+                    x:Name="GridCampos"
+                    ColumnDefinitions="*,*,*,*,*,*,*,*,*,*,*,*"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                    ColumnSpacing="10"
+                    RowSpacing="25">
+
+                    <!-- Linha 0 -->
+                    <VerticalStackLayout x:Name="cOs" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="OS" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eOs" Style="{StaticResource EntryCampo}" Placeholder="OS" IsEnabled="False" BackgroundColor="LightGray" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cExterno" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" Spacing="5">
+                        <Label Text="Externo" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbExterno" Color="YellowGreen" IsEnabled="False"  />
+                        </Border>
+                    </VerticalStackLayout>
+
+
+                    <!-- Linha 1 -->
+                    <VerticalStackLayout x:Name="cNome" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" Spacing="5">
+                        <Label Text="Nome Completo" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eNome" Style="{StaticResource EntryCampo}" Placeholder="Nome" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cTelefone" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Telefone*" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eTelefone"
+                               Style="{StaticResource EntryCampo}"
+                               Keyboard="Telephone"
+                               Placeholder="(11) 11111-1111">
+                                <Entry.Behaviors>
+                                    <behaviors:MascaraBehavior Tipo="Telefone" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cGarantia" Grid.Row="1" Grid.Column="10" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Garantia" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbGarantia" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cBtnGarantia" Grid.Row="1" Grid.Column="11" Grid.ColumnSpan="2" >
+                        <Label Text="" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" HorizontalOptions="Start">
+                            <Button Text="Ver NF" Style="{StaticResource BotaoAzul}" Clicked="OnNotaFiscalClicked" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Linha 2 -->
+                    <VerticalStackLayout x:Name="cAparelho" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Aparelho*" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Picker x:Name="pAparelho" Style="{StaticResource PickerCampo}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cCodigo" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Código" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eCodigo" Style="{StaticResource EntryCampo}" Placeholder="Código" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cSerie" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="5" Spacing="5">
+                        <Label Text="Nro Série" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eSerie" Style="{StaticResource EntryCampo}" Placeholder="Nro Série" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cEmissao" Grid.Row="2" Grid.Column="10" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Data Emissão*" Style="{StaticResource LabelCampo}" />
+                        <Border x:Name="bEmissao" Style="{StaticResource BordaCampo}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+
+                                <Entry x:Name="eEmissao" Style="{StaticResource EntryCampo}" Keyboard="Numeric" Placeholder="dd/mm/aaaa" 
+                                    TextChanged="OnDataTextChanged" Margin="0,0,0,0">
+                                    <Entry.Behaviors>
+                                        <behaviors:MascaraBehavior Tipo="Data" />
+                                    </Entry.Behaviors>
+                                </Entry>
+
+                                <Grid Grid.Column="1" WidthRequest="40" IsClippedToBounds="True">
+                                    <Label x:Name="lblIconeData" Text="📅" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                    <DatePicker x:Name="pEmissao" Opacity="0" DateSelected="OnDataSelecionada" />
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+
+                    <!-- Linha 3 -->
+                    <VerticalStackLayout x:Name="cDefeito" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="12" Spacing="5">
+                        <Label Text="Defeito" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Editor x:Name="eDefeito" Placeholder="Defeito" HeightRequest="100" AutoSize="Disabled" TextColor="#0F172A" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Linha 4 -->
+                    <VerticalStackLayout x:Name="cCondAparelho" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="12" Spacing="5">
+                        <Label Text="Condição do Aparelho" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eCondAparelho" Style="{StaticResource EntryCampo}" Placeholder="Condição do Aparelho" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Linha 5 -->
+                    <VerticalStackLayout x:Name="cCabo" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Cabo AC" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbCabo" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cControle" Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Controle" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbControle" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cBase" Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Base" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbBase" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cSuporte" Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="1" Spacing="5">
+                        <Label Text="Suporte" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbSuporte" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cCaixaAc" Grid.Row="0" Grid.Column="7" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Caixa Acust" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                            <CheckBox x:Name="cbCaixaAc" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cOutroAcess" Grid.Row="0" Grid.Column="8" Grid.ColumnSpan="6" Spacing="5">
+                        <Label Text="Outro Acessório" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Entry x:Name="eOutroAcess" Style="{StaticResource EntryCampo}" Placeholder="Outro Acessório" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Border
+                        Grid.Row="5"
+                        BackgroundColor="White"
+                        Stroke="#E2E8F0"
+                        StrokeThickness="1"
+                        Grid.ColumnSpan="12"
+                        Padding="20">
+
+                        <Grid RowDefinitions="Auto,Auto,*" RowSpacing="0">
+
+                            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="10">
+                                <Label Text="Peças" FontSize="20" FontAttributes="Bold"
+                                    TextColor="#16315e" VerticalOptions="Center" />
+                                <Button Grid.Column="1" Text="+ Adicionar peça" Style="{StaticResource BotaoImprimir}" Clicked="OnAdicionarPecaClicked" />
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="1"
+                                ColumnDefinitions="{StaticResource ColunasTabela}"
+                                BackgroundColor="#F1F5F9"
+                                Padding="10,12">
+
+                                <Label Grid.Column="0" HorizontalOptions="Center" Text="Peça" FontAttributes="Bold" TextColor="#0F172A" />
+                                <Label Grid.Column="1" HorizontalOptions="Center" Text="Qtde" FontAttributes="Bold" TextColor="#0F172A" />
+                                <Label Grid.Column="2" HorizontalOptions="Center" Text="Valor" FontAttributes="Bold" TextColor="#0F172A" />
+                                <Label Grid.Column="3" HorizontalOptions="Center" Text="Ações" FontAttributes="Bold" TextColor="#0F172A" />
+                            </Grid>
+
+                            <CollectionView
+                                x:Name="cvPecas"
+                                Grid.Row="2"
+                                SelectionMode="None"
+                                EmptyView="Nenhum cliente cadastrado.">
+
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <VerticalStackLayout>
+
+                                            <Grid ColumnDefinitions="{StaticResource ColunasTabela}" Padding="10,10" ColumnSpacing="0">
+
+                                                <Label Grid.Column="0" Text="{Binding Nome}" HorizontalOptions="Center" VerticalOptions="Center" 
+                                                       TextColor="#000" />
+
+                                                <Label Grid.Column="1" Text="{Binding Qtde}" HorizontalOptions="Center" VerticalOptions="Center" 
+                                                       TextColor="#000" LineBreakMode="TailTruncation" />
+
+                                                <Label Grid.Column="2" Text="{Binding Valor, Converter={StaticResource MascaraConverter}, ConverterParameter=Moeda}" 
+                                                       HorizontalOptions="Center" VerticalOptions="Center" TextColor="#475569" />
+
+                                                <HorizontalStackLayout Grid.Column="3" Spacing="1" HorizontalOptions="Center">
+                                                    <Button Text="Editar" Style="{StaticResource BotaoAzul}" Clicked="OnEditarPecaClicked" />
+
+                                                    <Button Text="Apagar" Style="{StaticResource BotaoVermelho}" Clicked="OnApagarPecaClicked" />
+                                                </HorizontalStackLayout>
+                                            </Grid>
+
+                                            <BoxView HeightRequest="1" Color="#E2E8F0" />
+
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                        </Grid>
+                    </Border>
+                    <Border x:Name="cBotaoConfirmar" Grid.Row="6" Grid.Column="7" Grid.ColumnSpan="3"  WidthRequest="200" Style="{StaticResource BordaMenu}" 
+                        HorizontalOptions="End" VerticalOptions="Center">
+                        <Button Text="Confirmar" FontAttributes="Bold" Style="{StaticResource BotaoImprimir}" />
+                    </Border>
+                    <Border x:Name="cBotaoVoltar" Grid.Row="6" Grid.Column="10" Grid.ColumnSpan="3"  WidthRequest="200" Style="{StaticResource BordaMenu}" 
+                            HorizontalOptions="End" VerticalOptions="Center">
+                        <Button Text="Voltar" FontAttributes="Bold" Style="{StaticResource BotaoMenu}" Clicked="btnVoltarClicked" />
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid x:Name="GridModal" Grid.Row="0" Grid.RowSpan="2" IsVisible="False">
+            <BoxView Color="#99000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelarGridModal" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border 
+                x:Name="ConfirmacaoExclusaoBorder"
+                IsVisible="False"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12" x:Name="ConfirmacaoExclusao">
+                    <Label Text="Deseja realmente excluir esta peça?" FontSize="20" FontAttributes="Bold" TextColor="#16315e" HorizontalOptions="Center" />
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Button Text="Excluir" Style="{StaticResource BotaoVermelho}" Clicked="OnExcluirPeca" />
+                        <Button Text="Cancelar" Style="{StaticResource BotaoAzul}" Clicked="OnCancelarGridModal" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+            </Border>
+
+            <Border 
+                x:Name="ModalBorderEdicao"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12" x:Name="AddPeca">
+                    <Label x:Name="lTituloGridModal" Text="Adicionar Peça"
+                       FontSize="20" FontAttributes="Bold" TextColor="#0F172A" />
+
+                    <Label Text="Peça" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="ePecaNome" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
+                    <Label Text="Quantidade" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="ePecaQtde" Style="{StaticResource EntryCampo}"
+                           Keyboard="Numeric" Text="1" />
+                    </Border>
+
+                    <Label Text="Valor unitário" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="ePecaValor" Style="{StaticResource EntryCampo}"
+                           Keyboard="Numeric" />
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0" Text="Cancelar"
+                            Style="{StaticResource BotaoVermelho}"
+                            Clicked="OnCancelarGridModal" />
+                        <Button Grid.Column="1" Text="Salvar"
+                            Style="{StaticResource BotaoAzul}"
+                            Clicked="OnSalvarGridModal" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+        </Grid>
+
+        <Grid x:Name="GridNfModal" Grid.Row="0" Grid.RowSpan="2" IsVisible="False">
+            <BoxView Color="#99000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelarNfModal" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+            
+            <Border 
+                x:Name="ModalBorderNfEdicao"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12" x:Name="VerificarNota">
+                    <Label Text="Nota Fiscal" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#0F172A" />
+
+                    <Label Text="Revenda" Style="{StaticResource LabelCampo}" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eRevenda" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
+                    <Label Text="Nro NF" Style="{StaticResource LabelCampo}" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eNroNF" Style="{StaticResource EntryCampo}" Keyboard="Numeric" Text="1" />
+                    </Border>
+
+                    <Label Text="Data Compra" Style="{StaticResource LabelCampo}" TextColor="#475569" />
+                    <Border x:Name="bCompra" Style="{StaticResource BordaCampo}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+
+                            <Entry x:Name="eCompra" Style="{StaticResource EntryCampo}" Keyboard="Numeric" Placeholder="dd/mm/aaaa" 
+                                TextChanged="OnDataTextChanged" Margin="0,0,0,0">
+                                <Entry.Behaviors>
+                                    <behaviors:MascaraBehavior Tipo="Data" />
+                                </Entry.Behaviors>
+                            </Entry>
+
+                            <Grid Grid.Column="1" WidthRequest="40" IsClippedToBounds="True">
+                                <Label x:Name="lblIconeCompra" Text="📅" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                <DatePicker x:Name="pCompra" DateSelected="OnDataSelecionada" />
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarNfModal" />
+                        <Button Grid.Column="1" Text="Salvar" Style="{StaticResource BotaoAzul}" Clicked="OnSalvarNfModal" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

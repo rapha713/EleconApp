@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="CadastroClientes.Views.ClientesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:CadastroClientes.Behaviors"
+    Shell.NavBarIsVisible="False"
+    Title="Pagina Inicial"
+    BackgroundColor="#F4F6F9">
+
+    <ContentPage.Resources>
+        <Style x:Key="BordaMenu" TargetType="Border">
+            <Setter Property="Stroke" Value="#1E293B" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="Padding" Value="12,2" />
+            <Setter Property="StrokeShape">
+                <Setter.Value>
+                    <RoundRectangle CornerRadius="8" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BotaoMenu" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="TextColor" Value="#417bfa" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid x:Name="Raiz" ColumnDefinitions="240,*">
+
+        <!-- MENU -->
+        <Grid
+            x:Name="Menu"
+            Grid.Column="0"
+            BackgroundColor="White"
+            RowDefinitions="Auto,*,Auto"
+            Padding="20">
+
+            <ScrollView x:Name="MenuScroll" Orientation="Vertical">
+                <StackLayout x:Name="MenuItens" Orientation="Vertical" Spacing="8">
+
+                    <Image
+                        x:Name="Logo"
+                        Source="logoelecon.png"
+                        Aspect="AspectFit"
+                        HeightRequest="80"
+                        HorizontalOptions="Center" />
+
+                    <Label
+                        x:Name="TituloMenu"
+                        Text="GERENCIAMENTO"
+                        TextColor="#5683cc"
+                        FontSize="11"
+                        Margin="0,20,0,8" />
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="OS" Style="{StaticResource BotaoMenu}" Clicked="OnOrdemServicoClicked" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Relatórios" Style="{StaticResource BotaoMenu}" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Configurações" Style="{StaticResource BotaoMenu}" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Sair" Style="{StaticResource BotaoMenu}" Clicked="OnSairClicked" />
+                    </Border>
+
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+
+        <Grid
+            x:Name="Conteudo"
+            Grid.Column="1"
+            Padding="30"
+            RowDefinitions="Auto,Auto,*"
+            RowSpacing="24"
+            BackgroundColor="#16315e">
+
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+
+                <VerticalStackLayout Spacing="4">
+
+                    <Label
+                        Text="Elecon Assistência Técnica"
+                        FontSize="28"
+                        FontAttributes="Bold"
+                        TextColor="White" />
+
+                    <Label
+                        Text="Ultimas OS cadastradas"
+                        FontSize="14"
+                        TextColor="#8f96a1" />
+
+                </VerticalStackLayout>
+
+                <Button
+                    Grid.Column="1"
+                    Text="+ Novo cliente"
+                    BackgroundColor="#417bfa"
+                    TextColor="White"
+                    CornerRadius="8"
+                    Padding="18,12"
+                    VerticalOptions="Center"
+                    Clicked="OnNovoClienteClicked" />
+
+            </Grid>
+
+            <!--<Grid
+                Grid.Row="1"
+                ColumnDefinitions="*,*"
+                ColumnSpacing="16">
+
+                <Border
+                    BackgroundColor="White"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1"
+                    Padding="20">
+
+                    <VerticalStackLayout Spacing="8">
+
+                        <Label
+                            Text="TOTAL DE CLIENTES"
+                            FontSize="12"
+                            TextColor="#64748B" />
+
+                        <Label
+                            x:Name="TotalClientesLabel"
+                            FontSize="30"
+                            FontAttributes="Bold"
+                            TextColor="#0F172A" />
+
+                        <Label
+                            x:Name="PendentesLabel"
+                            Text="Tudo sincronizado"
+                            FontSize="12"
+                            TextColor="#16A34A" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+                <Border
+                    Grid.Column="1"
+                    BackgroundColor="White"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1"
+                    Padding="20">
+
+                    <VerticalStackLayout Spacing="8">
+
+                        <Label
+                            Text="SINCRONIZAÇÃO"
+                            FontSize="12"
+                            TextColor="#64748B" />
+
+                        <Label
+                            x:Name="StatusSincronizacaoLabel"
+                            Text="Verificando..."
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#64748B" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+            </Grid>-->
+
+            <Border
+                Grid.Row="2"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                Padding="20">
+
+                <Grid RowDefinitions="Auto,*" RowSpacing="16">
+
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+
+                        <Label
+                            Text="OS"
+                            FontSize="19"
+                            FontAttributes="Bold"
+                            TextColor="#0F172A" />
+
+                    </Grid>
+
+                    <CollectionView
+                        x:Name="cvClientes"
+                        Grid.Row="1"
+                        SelectionMode="None"
+                        EmptyView="Nenhum cliente cadastrado.">
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border Style="{StaticResource CardCliente}">
+
+                                    <Grid
+                                        ColumnDefinitions="*,Auto"
+                                        RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                                        ColumnSpacing="10"
+                                        RowSpacing="5">
+
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Text="{Binding Nome}"
+                                            Style="{StaticResource TextoCardPrincipal}"
+                                            FontSize="16"
+                                            FontAttributes="Bold"
+                                            TextColor="#0F172A" />
+
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Text="{Binding Andamento}"
+                                            Style="{StaticResource TextoCardPrincipal}"
+                                            FontSize="12"
+                                            TextColor="#64748B"
+                                            HorizontalOptions="End" />
+
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.ColumnSpan="2"
+                                            Text="{Binding AparelhoTexto}"
+                                            Style="{StaticResource TextoCardPrincipal}"
+                                            FontSize="13"
+                                            TextColor="#475569" />
+
+                                        <Label
+                                            Grid.Row="2"
+                                            Grid.ColumnSpan="2"
+                                            Style="{StaticResource TextoCardPrincipal}"
+                                            Text="{Binding Telefone, Converter={StaticResource MascaraConverter}, 
+                                                ConverterParameter=Telefone, StringFormat='Telefone: {0}'}"
+                                            FontSize="13"
+                                            TextColor="#475569" />
+
+                                        <Label
+                                            Grid.Row="3"
+                                            Grid.ColumnSpan="2"
+                                            Text="{Binding CidadeTexto}"
+                                            Style="{StaticResource TextoCardPrincipal}"
+                                            FontSize="13"
+                                            TextColor="#475569" />
+
+                                        <Label
+                                            x:Name="Acessorio"
+                                            Grid.Row="4"
+                                            Grid.ColumnSpan="2"
+                                            Style="{StaticResource TextoCardPrincipal}"
+                                            Text="{Binding AcessoriosTexto}"
+                                            FontSize="13"
+                                            TextColor="#475569" />
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                    </CollectionView>
+
+                </Grid>
+
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

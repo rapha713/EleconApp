@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CadastroClientes.Resources.Styles.EstilosCustomizados">
+
+    <!-- Botão azul -->
+    <Style x:Key="BotaoAzul" TargetType="Button">
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="BackgroundColor" Value="#7aaefa" />
+        <Setter Property="HeightRequest" Value="45" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#7aaefa" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#0d6efd" />
+                            <Setter Property="TextColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#0a58ca" />
+                            <Setter Property="TextColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Botão vermelho -->
+    <Style x:Key="BotaoVermelho" TargetType="Button" BasedOn="{StaticResource BotaoAzul}">
+        <Setter Property="BackgroundColor" Value="#d65864" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#d65864" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#dc3545" />
+                            <Setter Property="TextColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#a52834" />
+                            <Setter Property="TextColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Botão Imprimir -->
+    <Style x:Key="BotaoImprimir" TargetType="Button" BasedOn="{StaticResource BotaoAzul}">
+        <Setter Property="BackgroundColor" Value="#78d658" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#78d658" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#52cf27" />
+                            <Setter Property="TextColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#3b8f1e" />
+                            <Setter Property="TextColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Botão Menu -->
+    <Style x:Key="BordaMenu" TargetType="Border">
+        <Setter Property="Stroke" Value="#c9c9c9" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BotaoMenu" TargetType="Button" BasedOn="{StaticResource BotaoAzul}">
+        <Setter Property="BackgroundColor" Value="#fff" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#fff" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#c9c9c9" />
+                            <Setter Property="TextColor" Value="Black" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#757575" />
+                            <Setter Property="TextColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+
+    <!-- Estilos dos campos -->
+    <Style x:Key="LabelCampo" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+    
+    <Style x:Key="BordaCampo" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#fff" />
+        <Setter Property="Stroke" Value="#bdbdbd" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="EntryCampo" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="PlaceholderColor" Value="Gray" />
+        <Setter Property="HeightRequest" Value="45" />
+    </Style>
+
+    <Style x:Key="PickerCampo" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="HeightRequest" Value="45" />
+    </Style>
+
+    <Style x:Key="CardCliente" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#F8FAFC" />
+        <Setter Property="Stroke" Value="#E2E8F0" />
+        <Setter Property="StrokeThickness" Value="3" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+
+        <Style.Triggers>
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Cadastrado">
+                <Setter Property="BackgroundColor" Value="#EFF6FF" />
+                <Setter Property="Stroke" Value="#BFDBFE" />
+            </DataTrigger>
+
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Técnico">
+                <Setter Property="BackgroundColor" Value="#f3f7d5" />
+                <Setter Property="Stroke" Value="#d3db97" />
+            </DataTrigger>
+
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Aprovado">
+                <Setter Property="BackgroundColor" Value="#d1ffdd" />
+                <Setter Property="Stroke" Value="#95cfa4" />
+            </DataTrigger>
+            
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Reprovado">
+                <Setter Property="BackgroundColor" Value="#e63e3e" />
+                <Setter Property="Stroke" Value="#9e2b2b" />
+            </DataTrigger>
+
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Peça pedida">
+                <Setter Property="BackgroundColor" Value="#ffe6c7" />
+                <Setter Property="Stroke" Value="#d4b287" />
+            </DataTrigger>
+
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Pronta">
+                <Setter Property="BackgroundColor" Value="#33b52a" />
+                <Setter Property="Stroke" Value="#1d6b18" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextoCardPrincipal" TargetType="Label">
+        <Style.Triggers>
+            <DataTrigger TargetType="Label" Binding="{Binding Andamento}" Value="Reprovado">
+                <Setter Property="TextColor" Value="White" />
+            </DataTrigger>
+            <DataTrigger TargetType="Label" Binding="{Binding Andamento}" Value="Pronta">
+                <Setter Property="TextColor" Value="White" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>
