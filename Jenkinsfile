@@ -98,7 +98,7 @@ pipeline {
                         -p:RuntimeIdentifierOverride=win-x64 ^
                         -p:WindowsPackageType=MSIX ^
                         -p:AppxPackageSigningEnabled=true ^
-                        -p:PackageCertificateThumbprint=72B1001D43B2ECF0628C02BD67928F572A557AE4
+                        -p:PackageCertificateThumbprint=6C83E5A955FEC37F4E0DF8D21DD1526FA390CEA4
 
                     if errorlevel 1 exit /b 1
                 '''
