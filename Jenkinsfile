@@ -59,7 +59,7 @@ pipeline {
 
                         if errorlevel 1 exit /b 1
 
-                        copy /Y "bin\\Release\\net10.0-android\\publish\\*.apk" "artifacts\\EleconApp.apk"
+                        copy /Y "bin\\Release\\net10.0-android\\publish\\*-Signed.apk" "artifacts\\EleconApp.apk"
 
                         if errorlevel 1 exit /b 1
                     '''
