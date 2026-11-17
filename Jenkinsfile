@@ -96,7 +96,7 @@ pipeline {
                         -f net10.0-windows10.0.19041.0 ^
                         -c Release ^
                         -p:RuntimeIdentifierOverride=win-x64 ^
-                        -p:WindowsPackageType=Package ^
+                        -p:WindowsPackageType=MSIX ^
                         -p:AppxPackageSigningEnabled=true ^
                         -p:PackageCertificateThumbprint=72B1001D43B2ECF0628C02BD67928F572A557AE4
 
