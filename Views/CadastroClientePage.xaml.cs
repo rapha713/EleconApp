@@ -26,28 +26,39 @@ public partial class CadastroClientePage : ContentPage
         pCompra.MaximumDate = DateTime.Today;
         pEmissao.Date = DateTime.Today;
         eEmissao.Text = DateTime.Today.ToString("dd/MM/yyyy");
-
-        pCidade.ItemsSource = _cidades;
-        pCidade.ItemDisplayBinding = new Binding(nameof(ItemLista.Nome));
-
-        pAparelho.ItemsSource = _aparelhos;
-        pAparelho.ItemDisplayBinding = new Binding(nameof(ItemLista.Nome));
     }
 
-    private static readonly List<ItemLista> _cidades = new()
+    protected override async void OnAppearing()
     {
-        new(1, "Itu"),
-        new(2, "Salto"),
-        new(3, "Indaiatuba")
-    };
+        base.OnAppearing();
 
-    private static readonly List<ItemLista> _aparelhos = new()
+        await ListaDadosAsync(online: false);
+
+        //bool online = await _sincronizacao.SincronizarAsync();
+
+        //if (online)
+        //    await ListaDadosAsync(online: true);
+    }
+
+    private async Task ListaDadosAsync(bool online)
     {
-        new(1, "Televisão"),
-        new(2, "Radio"),
-        new(3, "Micro-ondas"),
-        new(4, "Outros")
-    };
+        try
+        {
+            var cidades = await _bancoLocal.ObterLocalidadesAsync();
+            var aparelhos = await _bancoLocal.ObterAparelhosAsync();
+            var marcas = await _bancoLocal.ObterMarcasAsync();
+
+            ListasDados.Carregar(cidades, aparelhos, marcas);
+
+            pCidade.ItemsSource = ListasDados.Cidades.ToList();
+            pAparelho.ItemsSource = ListasDados.Aparelhos.ToList();
+            pMarca.ItemsSource = ListasDados.Marcas.OrderBy(x => x.Nome).ToList();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Não foi possível carregar os dados: {ex.Message}", "OK");
+        }
+    }
 
     private async void OnCadastrarClicked(object sender, EventArgs e)
     {
@@ -109,13 +120,13 @@ public partial class CadastroClientePage : ContentPage
             var cliente = new Cliente
             {
                 Id = identificador,
-                OS = 1,
+                //OS = 1,
                 Nome = nome,
                 Telefone = telefone,
                 Endereco = eEndereco.Text?.Trim(),
                 Bairro = eBairro.Text?.Trim(),
                 Cidade = idCidade,
-                CEP = int.Parse(cep ?? "null"),
+                CEP = int.TryParse(cep, out var c) ? c : null,
                 DtaEmissao = emissao,
                 Aparelho = idAparelho,
                 Codigo = eCodigo.Text?.Trim(),
@@ -163,9 +174,11 @@ public partial class CadastroClientePage : ContentPage
             //}
             //else
             //{
-                await _bancoLocal.SalvarClienteAsync(cliente);
+            await _bancoLocal.SalvarClienteAsync(cliente);
 
-                await DisplayAlertAsync("Sucesso", "Cliente salvo localmente!", "OK");
+            int numeroOs = cliente.OS;
+
+            await DisplayAlertAsync("Sucesso", $"Cliente salvo com a OS {numeroOs}!", "OK");
             //}
 
             LimparCampos();

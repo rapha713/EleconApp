@@ -65,7 +65,7 @@
                     </Border>
 
                     <Border Style="{StaticResource BordaMenu}">
-                        <Button Text="Configurações" Style="{StaticResource BotaoMenu}" />
+                        <Button Text="Configurações" Style="{StaticResource BotaoMenu}" Clicked="OnConfiguracaoClicked" />
                     </Border>
 
                     <Border Style="{StaticResource BordaMenu}">
@@ -231,7 +231,7 @@
                                         <Label
                                             Grid.Row="1"
                                             Grid.ColumnSpan="2"
-                                            Text="{Binding AparelhoTexto}"
+                                            Text="{Binding MarcaAparelhoTexto}"
                                             Style="{StaticResource TextoCardPrincipal}"
                                             FontSize="13"
                                             TextColor="#475569" />

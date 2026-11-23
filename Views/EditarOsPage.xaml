@@ -93,18 +93,25 @@
                     <VerticalStackLayout x:Name="cAparelho" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
                         <Label Text="Aparelho*" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Picker x:Name="pAparelho" Style="{StaticResource PickerCampo}" />
+                            <Picker x:Name="pAparelho" Style="{StaticResource PickerCampo}" IsEnabled="False"/>
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout x:Name="cCodigo" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Spacing="5">
+                    <VerticalStackLayout x:Name="cMarca" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Marca" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Picker x:Name="pMarca" Style="{StaticResource PickerCampo}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cCodigo" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" Spacing="5">
                         <Label Text="Código" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
                             <Entry x:Name="eCodigo" Style="{StaticResource EntryCampo}" Placeholder="Código" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout x:Name="cSerie" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="5" Spacing="5">
+                    <VerticalStackLayout x:Name="cSerie" Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="4" Spacing="5">
                         <Label Text="Nro Série" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
                             <Entry x:Name="eSerie" Style="{StaticResource EntryCampo}" Placeholder="Nro Série" />
@@ -258,13 +265,62 @@
 
                         </Grid>
                     </Border>
-                    <Border x:Name="cBotaoConfirmar" Grid.Row="6" Grid.Column="7" Grid.ColumnSpan="3"  WidthRequest="200" Style="{StaticResource BordaMenu}" 
+                    <VerticalStackLayout Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
+                        <Label Text="Cadastrado" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
+                            <CheckBox x:Name="cbCadastrado" Color="YellowGreen" IsEnabled="False" IsChecked="True" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
+                        <Label Text="Vis. Técnica" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
+                            <CheckBox x:Name="cbTecnico" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
+                        <Label Text="Aprovado" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
+                            <CheckBox x:Name="cbAprovado" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
+                        <Label Text="Reprovado" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
+                            <CheckBox x:Name="cbReprovado" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
+                        <Label Text="Solic. Peça" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
+                            <CheckBox x:Name="cbSolicitado" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="6" Grid.Column="5" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
+                        <Label Text="Pronto" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
+                            <CheckBox x:Name="cbPronto" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="6" Grid.Column="6" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
+                        <Label Text="Entregue" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
+                            <CheckBox x:Name="cbEntregue" Color="YellowGreen" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Border x:Name="cBotaoConfirmar" Grid.Row="6" Grid.Column="7" Grid.ColumnSpan="3" WidthRequest="200" Style="{StaticResource BordaMenu}" 
                         HorizontalOptions="End" VerticalOptions="Center">
-                        <Button Text="Confirmar" FontAttributes="Bold" Style="{StaticResource BotaoImprimir}" />
+                        <Button Text="Confirmar" FontAttributes="Bold" Style="{StaticResource BotaoAzul}" Clicked="OnClickedSalvarOs" />
                     </Border>
-                    <Border x:Name="cBotaoVoltar" Grid.Row="6" Grid.Column="10" Grid.ColumnSpan="3"  WidthRequest="200" Style="{StaticResource BordaMenu}" 
+                    <Border x:Name="cBotaoVoltar" Grid.Row="6" Grid.Column="10" Grid.ColumnSpan="3" WidthRequest="200" Style="{StaticResource BordaMenu}" 
                             HorizontalOptions="End" VerticalOptions="Center">
-                        <Button Text="Voltar" FontAttributes="Bold" Style="{StaticResource BotaoMenu}" Clicked="btnVoltarClicked" />
+                        <Button Text="Voltar" FontAttributes="Bold" Style="{StaticResource BotaoVermelho}" Clicked="btnVoltarClicked" />
                     </Border>
                 </Grid>
             </VerticalStackLayout>
@@ -321,6 +377,11 @@
                         <Entry x:Name="ePecaNome" Style="{StaticResource EntryCampo}" />
                     </Border>
 
+                    <Label Text="Código Peça" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="ePecaCodigo" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
                     <Label Text="Quantidade" TextColor="#475569" />
                     <Border Style="{StaticResource BordaCampo}">
                         <Entry x:Name="ePecaQtde" Style="{StaticResource EntryCampo}"
@@ -330,16 +391,16 @@
                     <Label Text="Valor unitário" TextColor="#475569" />
                     <Border Style="{StaticResource BordaCampo}">
                         <Entry x:Name="ePecaValor" Style="{StaticResource EntryCampo}"
-                           Keyboard="Numeric" />
+                           Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <behaviors:MascaraBehavior Tipo="Moeda" />
+                            </Entry.Behaviors>
+                        </Entry>
                     </Border>
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
-                        <Button Grid.Column="0" Text="Cancelar"
-                            Style="{StaticResource BotaoVermelho}"
-                            Clicked="OnCancelarGridModal" />
-                        <Button Grid.Column="1" Text="Salvar"
-                            Style="{StaticResource BotaoAzul}"
-                            Clicked="OnSalvarGridModal" />
+                        <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoAzul}" Clicked="OnSalvarGridModal" />
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
                     </Grid>
 
                 </VerticalStackLayout>
@@ -400,8 +461,8 @@
                     </Border>
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
-                        <Button Grid.Column="0" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarNfModal" />
-                        <Button Grid.Column="1" Text="Salvar" Style="{StaticResource BotaoAzul}" Clicked="OnSalvarNfModal" />
+                        <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoAzul}" Clicked="OnSalvarNfModal" />
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarNfModal" />
                     </Grid>
 
                 </VerticalStackLayout>

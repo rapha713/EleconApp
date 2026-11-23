@@ -2,6 +2,7 @@ using CadastroClientes.Data;
 using CadastroClientes.Helpers;
 using CadastroClientes.Models;
 using CadastroClientes.Services;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.Maui.Networking;
 
 namespace CadastroClientes.Views;
@@ -26,40 +27,51 @@ public partial class ClientesPage : ContentPage
         //_sincronizacao = sincronizacao;
     }
 
-    public static class ListasFixas
-    {
-        private static readonly List<ItemLista> _cidades = new()
-        {
-            new(1, "Itu"),
-            new(2, "Salto"),
-            new(3, "Indaiatuba")
-        };
-
-        private static readonly List<ItemLista> _aparelhos = new()
-        {
-            new(1, "Televisão"),
-            new(2, "Radio"),
-            new(3, "Micro-ondas"),
-            new(4, "Outros")
-        };
-
-        public static string ObterCidade(int id) =>
-            _cidades.FirstOrDefault(c => c.Id == id)?.Texto ?? string.Empty;
-
-        public static string ObterAparelho(int id) =>
-            _aparelhos.FirstOrDefault(a => a.Id == id)?.Texto ?? string.Empty;
-    }
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
+        await ListaDadosAsync(online: false);
         await ListaClienteAsync(online: false);
 
         //bool online = await _sincronizacao.SincronizarAsync();
 
         //if (online)
         //    await ListaClienteAsync(online: true);
+    }
+
+    private async Task ListaDadosAsync(bool online)
+    {
+        try
+        {
+            var cidades = await _bancoLocal.ObterLocalidadesAsync();
+            var aparelhos = await _bancoLocal.ObterAparelhosAsync();
+            var marcas = await _bancoLocal.ObterMarcasAsync();
+
+            ListasDados.Carregar(cidades, aparelhos, marcas);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Não foi possível carregar os dados: {ex.Message}", "OK");
+        }
+    }
+
+    private async Task ListaClienteAsync(bool online)
+    {
+        try
+        {
+            var clientes = (await _bancoLocal.ObterClientesAsync()).Where(c => c.Andamento != "Entregue")
+                .OrderByDescending(c => c.DtaEmissao).ToList();
+
+            cvClientes.ItemsSource = clientes;
+            //TotalClientesLabel.Text = clientes.Count.ToString();
+
+            //AtualizarResumoSincronizacao(online, clientes.Count(c => !c.Sincronizado));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Não foi possível carregar os clientes: {ex.Message}", "OK");
+        }
     }
 
     protected override void OnDisappearing()
@@ -148,9 +160,17 @@ public partial class ClientesPage : ContentPage
         await Shell.Current.GoToAsync(nameof(OrdemServicoPage));
     }
 
+    private async void OnConfiguracaoClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(ConfiguracaoPage));
+    }
+
     private async void OnSairClicked(object sender, EventArgs e)
     {
-        
+        bool ok = await DisplayAlertAsync("Sair", "Deseja realmente fechar o programa?", "Sim", "Não");
+        if (!ok) return;
+
+        Application.Current?.Quit();
     }
 
     //private async void OnSincronizarClienteClicked(object sender, EventArgs e)
@@ -160,22 +180,4 @@ public partial class ClientesPage : ContentPage
     //    if (online)
     //        await ListaClienteAsync(online: true);
     //}
-
-    private async Task ListaClienteAsync(bool online)
-    {
-        try
-        {
-            var clientes = (await _bancoLocal.ObterClientesAsync())
-                .OrderByDescending(c => c.DtaEmissao).ToList();
-
-            cvClientes.ItemsSource = clientes;
-           //TotalClientesLabel.Text = clientes.Count.ToString();
-
-            //AtualizarResumoSincronizacao(online, clientes.Count(c => !c.Sincronizado));
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlertAsync("Erro", $"Não foi possível carregar os clientes: {ex.Message}", "OK");
-        }
-    }
 }

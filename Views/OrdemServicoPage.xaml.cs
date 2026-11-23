@@ -13,9 +13,9 @@ public partial class OrdemServicoPage : ContentPage
     private readonly BancoLocal _bancoLocal;
     private readonly ApiService _apiService;
     //private readonly SincronizacaoService _sincronizacao;
-
     public record ItemLista(int Id, string Texto);
     private bool? _compacto;
+    private List<Cliente> _todosClientes = new();
 
     public OrdemServicoPage(BancoLocal bancoLocal, ApiService apiService)
 	{
@@ -61,6 +61,21 @@ public partial class OrdemServicoPage : ContentPage
 
         _compacto = compacto;
         //AplicarLayout(compacto);
+    }
+
+    private void OnFiltroTextoChanged(object? sender, TextChangedEventArgs e) => AplicarFiltro();
+
+    private void OnFiltroSelecionado(object? sender, EventArgs e)
+    {
+        pFiltros.Title = pFiltros.SelectedIndex >= 0 ? string.Empty : "Filtrar por...";
+        eFiltros.Text = null;
+        AplicarFiltro();
+    }
+
+    private void OnExibirSelecionado(object? sender, EventArgs e)
+    {
+        pFiltrosAndamento.Title = pFiltrosAndamento.SelectedIndex >= 0 ? string.Empty : "Exibir apenas...";
+        AplicarFiltro();
     }
 
     private void AplicarLayout(bool compacto)
@@ -110,9 +125,11 @@ public partial class OrdemServicoPage : ContentPage
     {
         try
         {
-            var clientes = (await _bancoLocal.ObterClientesAsync()).OrderByDescending(c => c.DtaEmissao).ToList();
+            _todosClientes = (await _bancoLocal.ObterClientesAsync())            
+            .OrderByDescending(c => c.DtaEmissao)
+            .ToList();
 
-            cvClientes.ItemsSource = clientes;
+            AplicarFiltro();
             //TotalClientesLabel.Text = clientes.Count.ToString();
 
             //AtualizarResumoSincronizacao(online, clientes.Count(c => !c.Sincronizado));
@@ -122,6 +139,40 @@ public partial class OrdemServicoPage : ContentPage
             await DisplayAlertAsync("Erro", $"Não foi possível carregar os clientes: {ex.Message}", "OK");
         }
     }
+
+    private void AplicarFiltro()
+    {
+        string texto = (eFiltros.Text ?? string.Empty).Trim();
+        string? campo = pFiltros.SelectedItem as string;
+        string? exibicao = pFiltrosAndamento.SelectedItem as string;
+
+        var cmp = StringComparison.CurrentCultureIgnoreCase;
+        IEnumerable<Cliente> lista = _todosClientes;
+
+        if (!string.IsNullOrEmpty(texto) && campo is not null)
+        {
+            lista = campo switch
+            {
+                "OS" => lista.Where(c => c.OS.ToString().Contains(texto)),
+                "Nome" => lista.Where(c => (c.Nome ?? "").Contains(texto, cmp)),
+                "Telefone" => lista.Where(c => SomenteDigitos(c.Telefone).Contains(SomenteDigitos(texto))),
+                "Aparelho" => lista.Where(c => c.AparelhoTexto.Contains(texto, cmp)),
+                _ => lista
+            };
+        }
+
+        if (exibicao is null || exibicao == "Todos")
+            lista = lista.Where(c => c.Andamento != "Entregue");
+        else
+            lista = lista.Where(c => string.Equals(c.Andamento, exibicao, cmp));
+
+        cvClientes.ItemsSource = lista.ToList();
+    }
+
+    private static string SomenteDigitos(string? s) =>
+        new string((s ?? "").Where(char.IsDigit).ToArray());
+
+
 
     private async void btnEditarClicked(object sender, EventArgs e)
     {

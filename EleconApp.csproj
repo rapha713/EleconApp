@@ -101,6 +101,9 @@
 	  <MauiXaml Update="Views\ClientesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\ConfiguracaoPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\EditarOsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

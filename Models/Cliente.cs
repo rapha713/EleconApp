@@ -5,8 +5,9 @@ namespace CadastroClientes.Models;
 [Table("Clientes")]
 public class Cliente
 {
-    [PrimaryKey]
+    [NotNull]
     public Guid Id { get; set; }
+    [PrimaryKey, AutoIncrement]
     public int OS { get; set; }
     [NotNull]
     public string Nome { get; set; }
@@ -19,6 +20,7 @@ public class Cliente
     public DateTime DtaEmissao { get; set; } = DateTime.Now;
     [NotNull]
     public int Aparelho { get; set; }
+    public int Marca { get; set; }
     public string? Codigo { get; set; }
     public string? NroSerie { get; set; }
     public string? Defeito { get; set; }
@@ -37,22 +39,6 @@ public class Cliente
     public bool Externo { get; set; }
     public string? Andamento { get; set; }
 
-
-    [Ignore]
-    public string AparelhoTexto
-    {
-        get
-        {
-            var aparelho = ListasFixas.ObterAparelho(Aparelho);
-            return string.IsNullOrWhiteSpace(Codigo)
-                ? aparelho
-                : $"{aparelho} - {Codigo.Trim()}";
-        }
-    }
-
-    [Ignore]
-    public string CidadeTexto => ListasFixas.ObterCidade(Cidade);
-
     [Ignore]
     public string AcessoriosTexto
     {
@@ -70,4 +56,32 @@ public class Cliente
             return itens.Count > 0 ? string.Join(", ", itens) : "S/Acessório";
         }
     }
+
+    [Ignore]
+    public string MarcaTexto => ListasDados.ObterMarca(Marca);
+
+    [Ignore]
+    public string AparelhoTexto
+    {
+        get
+        {
+            var aparelho = ListasDados.ObterAparelho(Aparelho);
+            return string.IsNullOrWhiteSpace(Codigo) ? aparelho : $"{aparelho}  - {Codigo.Trim()}";
+        }
+    }
+
+    [Ignore]
+    public string MarcaAparelhoTexto
+    {
+        get
+        {
+            var aparelho = ListasDados.ObterAparelho(Aparelho);
+            var marca = ListasDados.ObterMarca(Marca);
+
+            return string.IsNullOrWhiteSpace(Codigo) ? aparelho : $"{aparelho} {marca} - {Codigo.Trim()}";
+        }
+    }
+
+    [Ignore]
+    public string CidadeTexto => ListasDados.ObterCidade(Cidade);
 }

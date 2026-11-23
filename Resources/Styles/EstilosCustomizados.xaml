@@ -172,7 +172,7 @@
                 <Setter Property="Stroke" Value="#BFDBFE" />
             </DataTrigger>
 
-            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Técnico">
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Vist. Técnico">
                 <Setter Property="BackgroundColor" Value="#f3f7d5" />
                 <Setter Property="Stroke" Value="#d3db97" />
             </DataTrigger>
@@ -187,14 +187,19 @@
                 <Setter Property="Stroke" Value="#9e2b2b" />
             </DataTrigger>
 
-            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Peça pedida">
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Peça Solicitada">
                 <Setter Property="BackgroundColor" Value="#ffe6c7" />
                 <Setter Property="Stroke" Value="#d4b287" />
             </DataTrigger>
 
-            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Pronta">
+            <DataTrigger TargetType="Border" Binding="{Binding Andamento}" Value="Pronto">
                 <Setter Property="BackgroundColor" Value="#33b52a" />
                 <Setter Property="Stroke" Value="#1d6b18" />
+            </DataTrigger>
+
+            <DataTrigger TargetType="Border" Binding="{Binding Autorizada}" Value="1">
+                <Setter Property="BackgroundColor" Value="#EFF6FF" />
+                <Setter Property="Stroke" Value="#BFDBFE" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -204,7 +209,7 @@
             <DataTrigger TargetType="Label" Binding="{Binding Andamento}" Value="Reprovado">
                 <Setter Property="TextColor" Value="White" />
             </DataTrigger>
-            <DataTrigger TargetType="Label" Binding="{Binding Andamento}" Value="Pronta">
+            <DataTrigger TargetType="Label" Binding="{Binding Andamento}" Value="Pronto">
                 <Setter Property="TextColor" Value="White" />
             </DataTrigger>
         </Style.Triggers>

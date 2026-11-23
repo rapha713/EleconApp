@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:CadastroClientes.Behaviors"
+             x:Class="CadastroClientes.Views.ConfiguracaoPage"
+             Shell.NavBarIsVisible="False"
+             Title="Configuração"
+             BackgroundColor="#F4F6F9">
+
+    <ContentPage.Resources>
+        <Style x:Key="BordaMenu" TargetType="Border">
+            <Setter Property="Stroke" Value="#1E293B" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="Padding" Value="12,2" />
+            <Setter Property="StrokeShape">
+                <Setter.Value>
+                    <RoundRectangle CornerRadius="8" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BotaoMenu" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="TextColor" Value="#417bfa" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid x:Name="Raiz" ColumnDefinitions="240,*">
+        <Grid x:Name="Menu" 
+              Grid.Column="0"
+              Background="White"
+              RowDefinitions="Auto,*"
+              Padding="20">
+            
+            <ScrollView x:Name="MenuScroll" Orientation="Vertical">
+                <StackLayout x:Name="MenuItens" Orientation="Vertical" Spacing="8">
+
+                    <Image
+                        x:Name="Logo"
+                        Source="logoelecon.png"
+                        Aspect="AspectFit"
+                        HeightRequest="80"
+                        HorizontalOptions="Center" />
+
+                    <Label
+                        x:Name="TituloMenu"
+                        Text="GERENCIAMENTO"
+                        TextColor="#5683cc"
+                        FontSize="11"
+                        Margin="0,20,0,8" />
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Página Inicial" Style="{StaticResource BotaoMenu}" Clicked="OnPaginaInicialClicked" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="OS" Style="{StaticResource BotaoMenu}" Clicked="OnOrdemServicoClicked" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Relatórios" Style="{StaticResource BotaoMenu}" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Sair" Style="{StaticResource BotaoMenu}" Clicked="OnSairClicked" />
+                    </Border>
+
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+
+        <Grid
+            x:Name="Conteudo"
+            Grid.Column="1"
+            Padding="30"
+            RowDefinitions="Auto,*,*,*"
+            RowSpacing="24"
+            BackgroundColor="#16315e">
+
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+
+                <VerticalStackLayout Spacing="4">
+
+                    <Label
+                        Text="Elecon Assistência Técnica"
+                        FontSize="28"
+                        FontAttributes="Bold"
+                        TextColor="White" />
+
+                    <Label
+                        Text="Alterar Configurações"
+                        FontSize="14"
+                        TextColor="#8f96a1" />
+
+                </VerticalStackLayout>
+            </Grid>
+
+            <Grid
+                Grid.Row="1"
+                ColumnDefinitions="*"
+                ColumnSpacing="16">
+
+                <Border
+                    BackgroundColor="White"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1"
+                    Padding="20">
+
+                    <Grid RowDefinitions="Auto,*" RowSpacing="8">
+
+                        <Grid Grid.Row="0" ColumnDefinitions="*, Auto ,Auto">
+                            <Label VerticalOptions="Center" FontSize="12" TextColor="#64748B">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="CIDADES - Total: " />
+                                        <Span x:Name="TotalCidadesSpan" FontAttributes="Bold" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Button Grid.Column="2" WidthRequest="150" Text="Adicionar Cidade" 
+                                    Style="{StaticResource BotaoAzul}" Clicked="OnAdicionarCidadeClicked"/>
+                        </Grid>
+
+                        <BoxView Grid.Row="1" HeightRequest="1.5" Color="#CBD5E1" />
+
+                            <CollectionView 
+                                x:Name="cvLocalidades"
+                                Grid.Row="2"
+                                SelectionMode="None"
+                                EmptyView="Nenhum cliente cadastrado.">
+
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Border Style="{StaticResource CardCliente}">
+
+                                            <Grid
+                                                ColumnDefinitions="*,Auto"
+                                                ColumnSpacing="10"
+                                                RowSpacing="5">
+
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Text="{Binding Cidade}"
+                                                    Style="{StaticResource TextoCardPrincipal}"
+                                                    FontSize="16"
+                                                    FontAttributes="Bold"
+                                                    VerticalOptions="Center"
+                                                    TextColor="#0F172A" />
+
+                                                <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                                    <HorizontalStackLayout>
+                                                        <Border WidthRequest="80" Style="{StaticResource BordaCampo}" Stroke="Black">
+                                                            <Button Text="Editar" Style="{StaticResource BotaoAzul}" Clicked="OnEditarCidadeClicked" />
+                                                        </Border>
+                                                        <Border WidthRequest="80" Style="{StaticResource BordaCampo}" Stroke="Black">
+                                                            <Button Text="Excluir" Style="{StaticResource BotaoVermelho}" Clicked="OnExcluirCidadeClicked" />
+                                                        </Border>
+                                                    </HorizontalStackLayout>
+                                                </VerticalStackLayout>
+
+                                            </Grid>
+
+                                        </Border>
+
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+
+                            </CollectionView>
+
+                    </Grid>
+
+                </Border>
+                
+            </Grid>
+
+            <Grid
+                Grid.Row="2"
+                ColumnDefinitions="*"
+                ColumnSpacing="16">
+
+                <Border
+                    BackgroundColor="White"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1"
+                    Padding="20">
+
+                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+
+                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto">
+                            <Label VerticalOptions="Center" FontSize="12" TextColor="#64748B">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="APARELHOS - Total: " />
+                                        <Span x:Name="TotalAparelhosSpan" FontAttributes="Bold" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Button Grid.Column="2" WidthRequest="160" Text="Adicionar Aparelho" 
+                                    Style="{StaticResource BotaoAzul}" Clicked="OnAdicionarAparelhoClicked"/>
+                        </Grid>
+
+                        <BoxView Grid.Row="1" HeightRequest="1.5" Color="#CBD5E1" />
+
+                        <CollectionView
+                            x:Name="cvAparelhos"
+                            Grid.Row="2"
+                            SelectionMode="None"
+                            EmptyView="Nenhum cliente cadastrado.">
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Border Style="{StaticResource CardCliente}">
+
+                                        <Grid
+                                            ColumnDefinitions="*,*,Auto"
+                                            ColumnSpacing="10"
+                                            RowSpacing="5">
+
+                                            <Label
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                Text="{Binding Nome}"
+                                                Style="{StaticResource TextoCardPrincipal}"
+                                                FontSize="16"
+                                                FontAttributes="Bold"
+                                                VerticalOptions="Center"
+                                                TextColor="#0F172A" />
+
+                                            <Label
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Text="{Binding StatusTexto}"
+                                                Style="{StaticResource TextoCardPrincipal}"
+                                                FontSize="16"
+                                                FontAttributes="Bold"
+                                                VerticalOptions="Center"
+                                                TextColor="#0F172A" />
+
+                                            <VerticalStackLayout Grid.Column="2" Spacing="4" VerticalOptions="Center">
+                                                <HorizontalStackLayout>
+                                                    <Border WidthRequest="80" Style="{StaticResource BordaCampo}" Stroke="Black">
+                                                        <Button Text="Editar" Style="{StaticResource BotaoAzul}" Clicked="OnEditarAparelhoClicked" />
+                                                    </Border>
+
+                                                    <Border WidthRequest="95" Style="{StaticResource BordaCampo}" Stroke="Black" IsVisible="{Binding Ativo}">
+                                                        <Button Text="Desativar" Style="{StaticResource BotaoVermelho}" Clicked="OnAlterarStatusAparelhoClicked" />
+                                                    </Border>
+
+                                                    <Border WidthRequest="95" Style="{StaticResource BordaCampo}" Stroke="Black" IsVisible="{Binding Inativo}">
+                                                        <Button Text="Ativar" Style="{StaticResource BotaoImprimir}" Clicked="OnAlterarStatusAparelhoClicked" />
+                                                    </Border>
+                                                </HorizontalStackLayout>
+                                            </VerticalStackLayout>
+
+                                        </Grid>
+
+                                    </Border>
+
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>
+
+                    </Grid>
+
+                </Border>
+
+            </Grid>
+
+            <Grid
+                Grid.Row="3"
+                ColumnDefinitions="*"
+                ColumnSpacing="16">
+
+                <Border
+                    BackgroundColor="White"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1"
+                    Padding="20">
+
+                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+
+                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto">
+                            <Label VerticalOptions="Center" FontSize="12" TextColor="#64748B">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="MARCAS - Total: " />
+                                        <Span x:Name="TotalMarcasSpan" FontAttributes="Bold" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Button Grid.Column="2" HorizontalOptions="End" WidthRequest="160" Text="Adicionar Marca" 
+                                    Style="{StaticResource BotaoAzul}" Clicked="OnAdicionarMarcaClicked"/>
+                        </Grid>
+
+                        <BoxView Grid.Row="1" HeightRequest="1.5" Color="#CBD5E1" />
+
+                        <CollectionView
+                                x:Name="cvMarcas"
+                                Grid.Row="2"
+                                SelectionMode="None"
+                                EmptyView="Nenhum cliente cadastrado.">
+
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Border Style="{StaticResource CardCliente}">
+
+                                            <Grid
+                                            ColumnDefinitions="*,*,Auto"
+                                            ColumnSpacing="10"
+                                            RowSpacing="5">
+
+                                                <Label
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                Text="{Binding Nome}"
+                                                Style="{StaticResource TextoCardPrincipal}"
+                                                FontSize="16"
+                                                FontAttributes="Bold"
+                                                VerticalOptions="Center"
+                                                TextColor="#0F172A" />
+
+                                                <Label
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Text="{Binding StatusTexto}"
+                                                Style="{StaticResource TextoCardPrincipal}"
+                                                FontSize="16"
+                                                FontAttributes="Bold"
+                                                VerticalOptions="Center"
+                                                TextColor="#0F172A" />
+
+
+                                                <VerticalStackLayout Grid.Column="2" Spacing="4" VerticalOptions="Center">
+                                                    <HorizontalStackLayout>
+                                                        <Label Text="{Binding Autorizada}" IsVisible="False" />
+
+                                                        <Border WidthRequest="80" Style="{StaticResource BordaCampo}" Stroke="Black">
+                                                            <Button Text="Editar" Style="{StaticResource BotaoAzul}" Clicked="OnEditarMarcaClicked" />
+                                                        </Border>
+
+                                                        <Border WidthRequest="95" Style="{StaticResource BordaCampo}" Stroke="Black" IsVisible="{Binding Ativo}">
+                                                            <Button Text="Desativar" Style="{StaticResource BotaoVermelho}" Clicked="OnAlterarStatusMarcaClicked" />
+                                                        </Border>
+
+                                                        <Border WidthRequest="95" Style="{StaticResource BordaCampo}" Stroke="Black" IsVisible="{Binding Inativo}">
+                                                            <Button Text="Ativar" Style="{StaticResource BotaoImprimir}" Clicked="OnAlterarStatusMarcaClicked" />
+                                                        </Border>
+                                                    </HorizontalStackLayout>
+                                                </VerticalStackLayout>
+
+                                            </Grid>
+
+                                        </Border>
+
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+
+                            </CollectionView>
+                        
+                    </Grid>
+
+                </Border>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid x:Name="GridModal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" IsVisible="False">
+            <BoxView Color="#99000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelarGridModal"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border 
+                x:Name="ModalCidade"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsVisible="False">
+
+                <VerticalStackLayout Spacing="12" x:Name="AddCidade">
+                    <Label x:Name="lTituloModalCidade" Text="Adicionar Cidade"
+                        FontSize="20" FontAttributes="Bold" TextColor="#0F172A" />
+
+                    <Label Text="Cidade" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eCidade" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
+                    <Label Text="UF" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eUF" Text="SP" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoImprimir}" Clicked="OnSalvarGridCidade"/>
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+
+            <Border
+                x:Name="ModalExcluirCidade"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsVisible="False">
+
+                <VerticalStackLayout Spacing="12">
+                    <Label x:Name="lConfirmaExclusaoCidade"
+                           Text="Deseja realmente excluir esta cidade?"
+                           FontSize="20" FontAttributes="Bold" TextColor="#16315e"
+                           HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Button Text="Excluir" Style="{StaticResource BotaoVermelho}" Clicked="OnConfirmarExcluirCidade" />
+                        <Button Text="Cancelar" Style="{StaticResource BotaoAzul}" Clicked="OnCancelarGridModal" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border 
+                x:Name="ModalAparelho"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsVisible="False">
+
+                <VerticalStackLayout Spacing="12" x:Name="AddAparelho">
+                    <Label x:Name="lTituloModalAparelho" Text="Adicionar Aparelho"
+                        FontSize="20" FontAttributes="Bold" TextColor="#0F172A" />
+
+                    <Label Text="Aparelho" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eAparelho" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
+                    <Label Text="Status" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Picker x:Name="pStatus" Style="{StaticResource PickerCampo}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Ativo</x:String>
+                                    <x:String>Inativo</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoImprimir}" Clicked="OnSalvarGridAparelho"/>
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+
+            <Border 
+                x:Name="ModalMarca"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsVisible="False">
+
+                <VerticalStackLayout Spacing="12" x:Name="AddMarca">
+                    <Label x:Name="lTituloModalMarca" Text="Adicionar Marca" FontSize="20" FontAttributes="Bold" TextColor="#0F172A" />
+
+                    <Label Text="Marca" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eMarca" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
+                    <Label Text="Status" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Picker x:Name="pStatusMarca" Style="{StaticResource PickerCampo}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Ativo</x:String>
+                                    <x:String>Inativo</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Border>
+
+                    <Label Text="Autorizada" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
+                        <CheckBox x:Name="cbAutorizada" Color="YellowGreen" Margin="7,0,0,0" HorizontalOptions="Center" />
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoImprimir}" Clicked="OnSalvarGridMarca"/>
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -45,11 +45,12 @@ namespace CadastroClientes.Behaviors
                     if (formatado != entry.Text)
                     {
                         entry.Text = formatado;
-                        entry.CursorPosition = Math.Min(formatado.Length, entry.Text?.Length ?? 0);
+                        entry.CursorPosition = formatado.Length;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"Erro na máscara: {ex.Message}");
                 }
                 finally
                 {

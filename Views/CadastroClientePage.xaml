@@ -46,14 +46,14 @@
 
                     <!-- Linha 1 -->
                     <VerticalStackLayout x:Name="cNome" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" Spacing="5">
-                        <Label Text="Nome Completo*" Style="{StaticResource LabelCampo}" />
+                        <Label Text="Nome Completo" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
                             <Entry x:Name="eNome" Style="{StaticResource EntryCampo}" Placeholder="Nome" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout x:Name="cTelefone" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Spacing="5">
-                        <Label Text="Telefone*" Style="{StaticResource LabelCampo}" />
+                        <Label Text="Telefone" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
                             <Entry x:Name="eTelefone"
                                Style="{StaticResource EntryCampo}"
@@ -67,7 +67,7 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout x:Name="cEmissao" Grid.Row="6" Grid.Column="8" Grid.ColumnSpan="4" Spacing="5">
-                        <Label Text="Data Emissão*" Style="{StaticResource LabelCampo}" />
+                        <Label Text="Data Emissão" Style="{StaticResource LabelCampo}" />
                         <Border x:Name="bEmissao" Style="{StaticResource BordaCampo}">
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
 
@@ -104,35 +104,46 @@
                     </VerticalStackLayout>
                     
                     <!-- Linha 3 -->
-                    <VerticalStackLayout x:Name="cCidade" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Spacing="5">
-                        <Label Text="Cidade*" Style="{StaticResource LabelCampo}" />
+                    <VerticalStackLayout x:Name="cCidade" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Cidade" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Picker x:Name="pCidade" Style="{StaticResource PickerCampo}" />
+                            <Picker x:Name="pCidade" Style="{StaticResource PickerCampo}" ItemDisplayBinding="{Binding Nome}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout x:Name="cCep" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="1" Spacing="5">
+                    <VerticalStackLayout x:Name="cCep" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="1" Spacing="5">
                         <Label Text="CEP" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Entry x:Name="eCep" Style="{StaticResource EntryCampo}" Placeholder="00000-000" Keyboard="Numeric" />
+                            <Entry x:Name="eCep" Style="{StaticResource EntryCampo}" Placeholder="00000-000" Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <behaviors:MascaraBehavior Tipo="CEP" />
+                                </Entry.Behaviors>
+                            </Entry>
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout x:Name="cAparelho" Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" Spacing="5">
-                        <Label Text="Aparelho*" Style="{StaticResource LabelCampo}" />
+                    <VerticalStackLayout x:Name="cAparelho" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Aparelho" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Picker x:Name="pAparelho" Style="{StaticResource PickerCampo}" />
+                            <Picker x:Name="pAparelho" Style="{StaticResource PickerCampo}" ItemDisplayBinding="{Binding Nome}" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout x:Name="cCodigo" Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" Spacing="5">
+                    <VerticalStackLayout x:Name="cMarca" Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Marca" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}">
+                            <Picker x:Name="pMarca" Style="{StaticResource PickerCampo}" ItemDisplayBinding="{Binding Nome}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cCodigo" Grid.Row="3" Grid.Column="7" Grid.ColumnSpan="2" Spacing="5">
                         <Label Text="Código" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
                             <Entry x:Name="eCodigo" Style="{StaticResource EntryCampo}" Placeholder="Código" />
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout x:Name="cSerie" Grid.Row="3" Grid.Column="8" Grid.ColumnSpan="5" Spacing="5">
+                    <VerticalStackLayout x:Name="cSerie" Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="4" Spacing="5">
                         <Label Text="Nro Série" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
                             <Entry x:Name="eSerie" Style="{StaticResource EntryCampo}" Placeholder="Nro Série" />
@@ -178,7 +189,7 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout x:Name="cCompra" Grid.Row="6" Grid.Column="8" Grid.ColumnSpan="4" Spacing="5">
-                        <Label Text="Data Compra*" Style="{StaticResource LabelCampo}" />
+                        <Label Text="Data Compra" Style="{StaticResource LabelCampo}" />
                         <Border x:Name="bCompra" Style="{StaticResource BordaCampo}" BackgroundColor="LightGray">
                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
 

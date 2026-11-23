@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 namespace CadastroClientes.Helpers
 {
@@ -9,17 +10,17 @@ namespace CadastroClientes.Helpers
         CpfCnpj,
         Telefone,
         Data,
-        Moeda
+        Moeda,
+        CEP
     }
 
     public static class Mascara
     {
-        private const string PadraoCpf = "###.###.###-##";
-        private const string PadraoCnpj = "##.###.###/####-##";
         private const string PadraoTelefoneFixo = "(##) ####-####";
         private const string PadraoTelefoneCelular = "(##) #####-####";
         private const string PadraoData = "##/##/####";
-        private const string PadraoMoeda = "R$ #.###,##";
+        private const string PadraoCEP = "#####-###";
+        private static readonly CultureInfo PtBr = CultureInfo.GetCultureInfo("pt-BR");
 
         public static string SomenteDigitos(string? texto) =>
             string.IsNullOrEmpty(texto) ? string.Empty : new string(texto.Where(char.IsDigit).ToArray());
@@ -31,10 +32,8 @@ namespace CadastroClientes.Helpers
             return tipo switch
             {
                 TipoMascara.Data => Padrao(PadraoData, d),
-                TipoMascara.Moeda => Padrao(PadraoMoeda, d),
-                TipoMascara.Cpf => Padrao(PadraoCpf, d),
-                TipoMascara.Cnpj => Padrao(PadraoCnpj, d),
-                TipoMascara.CpfCnpj => d.Length <= 11 ? Padrao(PadraoCpf, d) : Padrao(PadraoCnpj, d),
+                TipoMascara.Moeda => FormatarMoeda(d),
+                TipoMascara.CEP => Padrao(PadraoCEP, d),
                 TipoMascara.Telefone => d.Length <= 10
                     ? Padrao(PadraoTelefoneFixo, d)
                     : Padrao(PadraoTelefoneCelular, d),
@@ -59,6 +58,17 @@ namespace CadastroClientes.Helpers
             }
 
             return sb.ToString();
+        }
+
+        private static string FormatarMoeda(string digitos)
+        {
+            if (string.IsNullOrEmpty(digitos)) return string.Empty;
+
+            if (digitos.Length > 12)
+                digitos = digitos[..12];
+
+            decimal valor = long.Parse(digitos) / 100m;
+            return valor.ToString("C2", PtBr);
         }
     }
 }
