@@ -11,13 +11,17 @@ public partial class CadastroClientePage : ContentPage
 {
     private readonly BancoLocal _bancoLocal;
     private readonly ApiService _apiService;
+    private readonly RelatorioService _relatorioService;
     private Dictionary<DatePicker, Entry> _paresData = null!;
+    private List<Cliente> _clientesModal = new();
+    private Cliente? _clienteSelecionado;
 
-    public CadastroClientePage(ApiService apiService)
+    public CadastroClientePage(ApiService apiService, RelatorioService relatorioService)
 	{
 		InitializeComponent();
         _bancoLocal = new BancoLocal();
         _apiService = apiService;
+        _relatorioService = relatorioService;
         _paresData = new()
         {
             [pCompra] = eCompra,
@@ -59,6 +63,89 @@ public partial class CadastroClientePage : ContentPage
             await DisplayAlertAsync("Erro", $"Não foi possível carregar os dados: {ex.Message}", "OK");
         }
     }
+
+    public async void OnNovoClienteClicked(object sender, EventArgs e)
+    {
+        _clienteSelecionado = null;
+        HabilitarCamposCliente(true);
+        LimparCamposCliente();
+    }
+
+    public async void OnSelecionarClienteClicked(object sender, EventArgs e)
+    {
+        _clientesModal = (await _bancoLocal.ObterClientesAsync()).OrderBy(c => c.Nome).ToList();
+
+        eBuscaModal.Text = string.Empty;
+        cvClientesModal.SelectedItem = null;
+        btnConfirmarModal.IsEnabled = false;
+        cvClientesModal.ItemsSource = _clientesModal;
+
+        GridModal.IsVisible = true;
+    }
+
+    private void OnBuscaModalChanged(object sender, TextChangedEventArgs e)
+    {
+        string texto = (e.NewTextValue ?? string.Empty).Trim();
+        var cmp = StringComparison.CurrentCultureIgnoreCase;
+
+        cvClientesModal.ItemsSource = string.IsNullOrEmpty(texto)
+            ? _clientesModal
+            : _clientesModal.Where(c =>
+                  (c.Nome ?? "").Contains(texto, cmp) ||
+                  SomenteDigitos(c.Telefone).Contains(SomenteDigitos(texto)) && SomenteDigitos(texto).Length > 0)
+              .ToList();
+    }
+
+    private void OnClienteModalSelecionado(object sender, SelectionChangedEventArgs e)
+    {
+        btnConfirmarModal.IsEnabled = e.CurrentSelection.Count > 0;
+    }
+
+    private void OnSelecionarGridModal(object sender, EventArgs e)
+    {
+        if (cvClientesModal.SelectedItem is not Cliente cliente)
+            return;
+
+        _clienteSelecionado = cliente;
+
+        eNome.Text = cliente.Nome ?? string.Empty;
+        eTelefone.Text = cliente.Telefone ?? string.Empty;
+        eEndereco.Text = cliente.Endereco ?? string.Empty;
+        eBairro.Text = cliente.Bairro ?? string.Empty;
+        pCidade.SelectedItem = (pCidade.ItemsSource as IEnumerable<ItemLista>)?
+            .FirstOrDefault(c => c.Id == cliente.Cidade);
+        eCep.Text = cliente.CEP.ToString() ?? string.Empty;
+
+        HabilitarCamposCliente(true);
+        FecharGridModal();
+    }
+
+    private void OnCancelarGridModal(object sender, EventArgs e) => FecharGridModal();
+
+    private void FecharGridModal() => GridModal.IsVisible = false;
+
+    private void HabilitarCamposCliente(bool habilitado)
+    {
+        eNome.IsEnabled = habilitado;
+        eTelefone.IsEnabled = habilitado;
+        eEndereco.IsEnabled = habilitado;
+        eBairro.IsEnabled = habilitado;
+        pCidade.IsEnabled = habilitado;
+        eCep.IsEnabled = habilitado;
+    }
+
+    private void LimparCamposCliente()
+    {
+        eNome.Text = string.Empty;
+        eTelefone.Text = string.Empty;
+        eEndereco.Text = string.Empty;
+        eBairro.Text = string.Empty;
+        pCidade.SelectedItem = null;
+        eCep.Text = string.Empty;
+    }
+
+    private static string SomenteDigitos(string? s) =>
+        new string((s ?? "").Where(char.IsDigit).ToArray());
 
     private async void OnCadastrarClicked(object sender, EventArgs e)
     {
@@ -179,6 +266,18 @@ public partial class CadastroClientePage : ContentPage
             int numeroOs = cliente.OS;
 
             await DisplayAlertAsync("Sucesso", $"Cliente salvo com a OS {numeroOs}!", "OK");
+
+            try
+            {
+                string caminho = await _relatorioService.GerarNroOsAsync(cliente);
+
+                await Launcher.Default.OpenAsync(
+                    new OpenFileRequest($"OS {cliente.OS}", new ReadOnlyFile(caminho)));
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlertAsync("Erro", $"Não foi possível gerar a OS: {ex.Message}", "OK");
+            }
             //}
 
             LimparCampos();
@@ -263,8 +362,9 @@ public partial class CadastroClientePage : ContentPage
             Posicionar(cCidade, new(5, 0, 8));
             Posicionar(cCep, new(5, 8, 4));
             Posicionar(cAparelho, new(6, 0, 6));
-            Posicionar(cCodigo, new(6, 6, 6));
-            Posicionar(cSerie, new(7, 0, 12));
+            Posicionar(cMarca, new(6, 6, 6));
+            Posicionar(cCodigo, new(7, 0, 6));
+            Posicionar(cSerie, new(7, 6, 6));
             Posicionar(cDefeito, new(8, 0, 12));
             Posicionar(cCondAparelho, new(9, 0, 12));
             Posicionar(cGarantia, new(10, 0, 4));
@@ -303,11 +403,12 @@ public partial class CadastroClientePage : ContentPage
             Posicionar(cEmissao, new(1, 9, 3));
             Posicionar(cEndereco, new(2, 0, 8));
             Posicionar(cBairro, new(2, 8, 4));
-            Posicionar(cCidade, new(3, 0, 3));
-            Posicionar(cCep, new(3, 3, 2));
-            Posicionar(cAparelho, new(3, 5, 2));
+            Posicionar(cCidade, new(3, 0, 2));
+            Posicionar(cCep, new(3, 2, 1));
+            Posicionar(cAparelho, new(3, 3, 2));
+            Posicionar(cMarca, new(3, 5, 2));
             Posicionar(cCodigo, new(3, 7, 2));
-            Posicionar(cSerie, new(3, 9, 3));
+            Posicionar(cSerie, new(3, 9, 4));
             Posicionar(cDefeito, new(4, 0, 12));
             Posicionar(cCondAparelho, new(5, 0, 12));
             Posicionar(cGarantia, new(6, 0, 2));

@@ -12,16 +12,19 @@ public partial class OrdemServicoPage : ContentPage
 
     private readonly BancoLocal _bancoLocal;
     private readonly ApiService _apiService;
+    private readonly RelatorioService _relatorioService;
     //private readonly SincronizacaoService _sincronizacao;
     public record ItemLista(int Id, string Texto);
     private bool? _compacto;
     private List<Cliente> _todosClientes = new();
+    private List<Cliente> _clientesFiltrados = new();
 
-    public OrdemServicoPage(BancoLocal bancoLocal, ApiService apiService)
+    public OrdemServicoPage(BancoLocal bancoLocal, ApiService apiService, RelatorioService relatorioService)
 	{
 		InitializeComponent();
         _bancoLocal = bancoLocal;
         _apiService = apiService;
+        _relatorioService = relatorioService;
         //_sincronizacao = sincronizacao;
     }
 
@@ -166,19 +169,72 @@ public partial class OrdemServicoPage : ContentPage
         else
             lista = lista.Where(c => string.Equals(c.Andamento, exibicao, cmp));
 
-        cvClientes.ItemsSource = lista.ToList();
+        _clientesFiltrados = lista.ToList();
+        cvClientes.ItemsSource = _clientesFiltrados;
     }
 
     private static string SomenteDigitos(string? s) =>
         new string((s ?? "").Where(char.IsDigit).ToArray());
-
-
 
     private async void btnEditarClicked(object sender, EventArgs e)
     {
         if (sender is Button button && button.BindingContext is Cliente cliente)
         {
             await Navigation.PushAsync(new EditarOsPage(cliente));
+        }
+    }
+
+    private async void btnImprimirClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button botao || botao.BindingContext is not Cliente cliente)
+            return;
+
+        try
+        {
+            botao.IsEnabled = false;
+
+            string caminho = await _relatorioService.GerarPdfOsAsync(cliente);
+
+            await Launcher.Default.OpenAsync(
+                new OpenFileRequest($"OS {cliente.OS}", new ReadOnlyFile(caminho)));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Não foi possível gerar a OS: {ex.Message}", "OK");
+        }
+        finally
+        {
+            botao.IsEnabled = true;
+        }
+    }
+
+    private async void btnImpressoFiltradas(object sender, EventArgs e)
+    {
+        if (sender is not Button botao)
+            return;
+
+        if (_clientesFiltrados.Count == 0)
+        {
+            await DisplayAlertAsync("Aviso", "Não há OS na tela para imprimir.", "OK");
+            return;
+        }
+
+        try
+        {
+            botao.IsEnabled = false;
+
+            string caminho = await _relatorioService.GerarOsFiltradaAsync(_clientesFiltrados);
+
+            await Launcher.Default.OpenAsync(
+                new OpenFileRequest("OS filtradas", new ReadOnlyFile(caminho)));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Não foi possível gerar as OS: {ex.Message}", "OK");
+        }
+        finally
+        {
+            botao.IsEnabled = true;
         }
     }
 }

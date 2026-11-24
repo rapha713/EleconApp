@@ -83,6 +83,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="itext" Version="9.8.1.1" />
+		<PackageReference Include="itext.bouncy-castle-adapter" Version="9.8.1.1" />
+		<PackageReference Include="itext.commons" Version="9.8.1.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />

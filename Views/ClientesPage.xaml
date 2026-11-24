@@ -103,7 +103,7 @@
 
                 <Button
                     Grid.Column="1"
-                    Text="+ Novo cliente"
+                    Text="+ Nova OS"
                     BackgroundColor="#417bfa"
                     TextColor="White"
                     CornerRadius="8"

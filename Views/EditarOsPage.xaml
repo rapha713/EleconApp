@@ -372,6 +372,9 @@
                     <Label x:Name="lTituloGridModal" Text="Adicionar Peça"
                        FontSize="20" FontAttributes="Bold" TextColor="#0F172A" />
 
+                    <Label Text="PARA ADICIONAR MÃO DE OBRA LANCE O CODIGO PEÇA COMO 0" FontSize="10" FontAttributes="Bold"
+                        TextColor="#0F172A" VerticalOptions="Center" Margin="20,0,0,0" />
+
                     <Label Text="Peça" TextColor="#475569" />
                     <Border Style="{StaticResource BordaCampo}">
                         <Entry x:Name="ePecaNome" Style="{StaticResource EntryCampo}" />

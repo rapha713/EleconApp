@@ -2,10 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:CadastroClientes.Behaviors"
+             xmlns:models="clr-namespace:CadastroClientes.Models"
+             xmlns:converters="clr-namespace:CadastroClientes.Converters"
              x:Class="CadastroClientes.Views.CadastroClientePage"
              Shell.NavBarIsVisible="False"
              Title="Cadastro Cliente"
              BackgroundColor="#16315e">
+    <ContentPage.Resources>
+        <converters:TelefoneConverter x:Key="TelefoneConverter" />
+    </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*">
         <Label
@@ -36,19 +41,32 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout x:Name="cExterno" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" Spacing="5">
+                    <VerticalStackLayout x:Name="cExterno" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="1" Spacing="5">
                         <Label Text="Externo" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Start">
                             <CheckBox x:Name="cbExterno" Color="YellowGreen" />
                         </Border>
                     </VerticalStackLayout>
 
+                    <VerticalStackLayout x:Name="cNovoCliente" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" Spacing="5">
+                        <Label Text="Cliente novo" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" HorizontalOptions="Start">
+                            <Button Text="Cadastrar" Style="{StaticResource BotaoAzul}" Clicked="OnNovoClienteClicked" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout x:Name="cClienteExistente" Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="3" Spacing="5">
+                        <Label Text="Cliente existente" Style="{StaticResource LabelCampo}" />
+                        <Border Style="{StaticResource BordaCampo}" HorizontalOptions="Start">
+                            <Button Text="Selecionar" Style="{StaticResource BotaoAzul}" Clicked="OnSelecionarClienteClicked" />
+                        </Border>
+                    </VerticalStackLayout>
 
                     <!-- Linha 1 -->
                     <VerticalStackLayout x:Name="cNome" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" Spacing="5">
                         <Label Text="Nome Completo" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Entry x:Name="eNome" Style="{StaticResource EntryCampo}" Placeholder="Nome" />
+                            <Entry x:Name="eNome" Style="{StaticResource EntryCampo}" Placeholder="Nome" IsEnabled="False" />
                         </Border>
                     </VerticalStackLayout>
 
@@ -56,9 +74,10 @@
                         <Label Text="Telefone" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
                             <Entry x:Name="eTelefone"
-                               Style="{StaticResource EntryCampo}"
-                               Keyboard="Telephone"
-                               Placeholder="(11) 11111-1111">
+                                   Style="{StaticResource EntryCampo}"
+                                   Keyboard="Telephone"
+                                   IsEnabled="False"
+                                   Placeholder="(11) 11111-1111">
                                 <Entry.Behaviors>
                                     <behaviors:MascaraBehavior Tipo="Telefone" />
                                 </Entry.Behaviors>
@@ -92,14 +111,14 @@
                     <VerticalStackLayout x:Name="cEndereco" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="8" Spacing="5">
                         <Label Text="Endereço" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Entry x:Name="eEndereco" Style="{StaticResource EntryCampo}" Placeholder="Endereço" />
+                            <Entry x:Name="eEndereco" Style="{StaticResource EntryCampo}" Placeholder="Endereço" IsEnabled="False" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout x:Name="cBairro" Grid.Row="2" Grid.Column="8" Grid.ColumnSpan="4" Spacing="5">
                         <Label Text="Bairro" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Entry x:Name="eBairro" Style="{StaticResource EntryCampo}" Placeholder="Bairro" />
+                            <Entry x:Name="eBairro" Style="{StaticResource EntryCampo}" Placeholder="Bairro" IsEnabled="False" />
                         </Border>
                     </VerticalStackLayout>
                     
@@ -107,14 +126,14 @@
                     <VerticalStackLayout x:Name="cCidade" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
                         <Label Text="Cidade" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Picker x:Name="pCidade" Style="{StaticResource PickerCampo}" ItemDisplayBinding="{Binding Nome}" />
+                            <Picker x:Name="pCidade" Style="{StaticResource PickerCampo}" ItemDisplayBinding="{Binding Nome}" IsEnabled="False" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout x:Name="cCep" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="1" Spacing="5">
                         <Label Text="CEP" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}">
-                            <Entry x:Name="eCep" Style="{StaticResource EntryCampo}" Placeholder="00000-000" Keyboard="Numeric">
+                            <Entry x:Name="eCep" Style="{StaticResource EntryCampo}" Placeholder="00000-000" Keyboard="Numeric" IsEnabled="False">
                                 <Entry.Behaviors>
                                     <behaviors:MascaraBehavior Tipo="CEP" />
                                 </Entry.Behaviors>
@@ -265,5 +284,74 @@
                 </Grid>
             </VerticalStackLayout>
         </ScrollView>
+        
+        <Grid x:Name="GridModal" Grid.Row="0" Grid.RowSpan="2" IsVisible="False">
+            <BoxView Color="#99000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelarGridModal" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border 
+                x:Name="ModalSelecao"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12" x:Name="AddPeca">
+                    <Label Text="Selecionar Cliente" FontSize="20" FontAttributes="Bold" TextColor="#0F172A" />
+
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eBuscaModal" Placeholder="Buscar por nome ou telefone" 
+                               Style="{StaticResource EntryCampo}" TextChanged="OnBuscaModalChanged" />
+                    </Border>
+
+                    <CollectionView x:Name="cvClientesModal"
+                                    HeightRequest="280"
+                                    SelectionMode="Single"
+                                    SelectionChanged="OnClienteModalSelecionado" Background="Beige">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Cliente">
+                                <VerticalStackLayout Padding="8,6" Spacing="2">
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroupList>
+                                            <VisualStateGroup x:Name="CommonStates">
+                                                <VisualState x:Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="Transparent" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState x:Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="White" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateGroupList>
+                                    </VisualStateManager.VisualStateGroups>
+                                    
+                                    <Label Text="{Binding Nome}" FontAttributes="Bold" TextColor="#0F172A" />
+                                    <Label Text="{Binding Telefone, Converter={StaticResource TelefoneConverter}}" 
+                                           FontSize="12" TextColor="#475569" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0" x:Name="btnConfirmarModal" Text="Selecionar" IsEnabled="False"
+                Style="{StaticResource BotaoAzul}" Clicked="OnSelecionarGridModal" />
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
+                    </Grid>
+                </VerticalStackLayout>
+
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>

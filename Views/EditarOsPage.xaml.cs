@@ -208,6 +208,7 @@ public partial class EditarOsPage : ContentPage
 
         lTituloGridModal.Text = peca is null ? "Adicionar peça" : "Editar peça";
         ePecaNome.Text = peca?.Nome ?? string.Empty;
+        ePecaCodigo.Text = peca?.CodigoPeca ?? string.Empty;
         ePecaQtde.Text = peca?.Qtde.ToString() ?? "1";
         ePecaValor.Text = peca?.Valor.ToString("0.00", CultureInfo.GetCultureInfo("pt-BR")) ?? string.Empty;
 

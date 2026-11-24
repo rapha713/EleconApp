@@ -42,6 +42,7 @@ namespace CadastroClientes
             });
 
             builder.Services.AddTransient<ApiService>();
+            builder.Services.AddSingleton<RelatorioService>();
             return builder.Build();
         }
 

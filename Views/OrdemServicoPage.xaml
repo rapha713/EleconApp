@@ -134,7 +134,7 @@
 
                 <Border x:Name="cBotaoImprimirFiltrados" Grid.Row="2" Grid.Column="4" Style="{StaticResource BordaMenu}" 
                     HorizontalOptions="End" VerticalOptions="Center">
-                    <Button Text="Imprimir OS filtradas" FontAttributes="Bold" Style="{StaticResource BotaoMenu}" />
+                    <Button Text="Imprimir OS filtradas" FontAttributes="Bold" Style="{StaticResource BotaoMenu}" Clicked="btnImpressoFiltradas" />
                 </Border>
             </Grid>
 
@@ -199,7 +199,7 @@
                                         <HorizontalStackLayout Grid.Column="6" Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
                                             <Button Text="Editar" Style="{StaticResource BotaoAzul}" Clicked="btnEditarClicked" />
 
-                                            <Button Text="Imprimir" Margin="-5,0,-5,0" Style="{StaticResource BotaoImprimir}" />
+                                            <Button Text="Imprimir" Margin="-5,0,-5,0" Style="{StaticResource BotaoImprimir}" Clicked="btnImprimirClicked" />
                                         </HorizontalStackLayout>
                                     </Grid>
 

@@ -71,4 +71,8 @@ namespace CadastroClientes.Helpers
             return valor.ToString("C2", PtBr);
         }
     }
+    public static class Formatacao
+    {
+        public static string SimOuTraco(bool? valor) => valor == true ? "Sim" : "-";
+    }
 }

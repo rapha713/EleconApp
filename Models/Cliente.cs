@@ -83,5 +83,17 @@ public class Cliente
     }
 
     [Ignore]
+    public string AparelhoMarcaTexto
+    {
+        get
+        {
+            var aparelho = ListasDados.ObterAparelho(Aparelho);
+            var marca = ListasDados.ObterMarca(Marca);
+
+            return string.IsNullOrWhiteSpace(Codigo) ? aparelho : $"{aparelho} {marca}";
+        }
+    }
+
+    [Ignore]
     public string CidadeTexto => ListasDados.ObterCidade(Cidade);
 }
