@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:CadastroClientes.Behaviors"
+             x:Class="CadastroClientes.Views.FuncionarioPage"
+             Shell.NavBarIsVisible="False"
+             Title="Funcionários">
+    <ContentPage.Resources>
+        <Style x:Key="BordaMenu" TargetType="Border">
+            <Setter Property="Stroke" Value="#1E293B" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="Padding" Value="12,2" />
+            <Setter Property="StrokeShape">
+                <Setter.Value>
+                    <RoundRectangle CornerRadius="8" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BotaoMenu" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="TextColor" Value="#417bfa" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid x:Name="Raiz" ColumnDefinitions="240,*">
+        <Grid x:Name="Menu" 
+              Grid.Column="0"
+              Background="White"
+              RowDefinitions="Auto,*"
+              Padding="20">
+
+            <ScrollView x:Name="MenuScroll" Orientation="Vertical">
+                <StackLayout x:Name="MenuItens" Orientation="Vertical" Spacing="8">
+
+                    <Image
+                        x:Name="Logo"
+                        Source="logoelecon.png"
+                        Aspect="AspectFit"
+                        HeightRequest="80"
+                        HorizontalOptions="Center" />
+
+                    <Label
+                        x:Name="TituloMenu"
+                        Text="GERENCIAMENTO"
+                        TextColor="#5683cc"
+                        FontSize="11"
+                        Margin="0,20,0,8" />
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Página Inicial" Style="{StaticResource BotaoMenu}" Clicked="OnPaginaInicialClicked" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="OS" Style="{StaticResource BotaoMenu}" Clicked="OnOrdemServicoClicked" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Relatórios" Style="{StaticResource BotaoMenu}" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Configurações" Style="{StaticResource BotaoMenu}" Clicked="OnConfiguracaoClicked" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Sair" Style="{StaticResource BotaoMenu}" Clicked="OnSairClicked" />
+                    </Border>
+
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+
+        <Grid
+            x:Name="Conteudo"
+            Grid.Column="1"
+            Padding="30"
+            RowDefinitions="Auto,Auto,*"
+            RowSpacing="24"
+            BackgroundColor="#16315e">
+
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+
+                <VerticalStackLayout Spacing="4">
+
+                    <Label
+                        Text="Elecon Assistência Técnica"
+                        FontSize="28"
+                        FontAttributes="Bold"
+                        TextColor="White" />
+
+                    <Label
+                        Text="Funcionários cadastradas"
+                        FontSize="14"
+                        TextColor="#8f96a1" />
+
+                </VerticalStackLayout>
+
+                <Button
+                    Grid.Column="1"
+                    Text="+ Novo Funcionario"
+                    BackgroundColor="#417bfa"
+                    TextColor="White"
+                    CornerRadius="8"
+                    Padding="18,12"
+                    VerticalOptions="Center" 
+                    Clicked="OnAdicionarFuncionarioClicked"/>
+
+            </Grid>
+
+            <Border
+                Grid.Row="2"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                Padding="20">
+
+                <Grid RowDefinitions="Auto,*" RowSpacing="16">
+
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        
+                        <Label
+                            Text="Funcionários"
+                            FontSize="19"
+                            FontAttributes="Bold"
+                            TextColor="#0F172A" />
+
+                    </Grid>
+
+                    <CollectionView
+                        x:Name="cvFuncionario"
+                        Grid.Row="1"
+                        SelectionMode="None"
+                        EmptyView="Nenhum cliente cadastrado.">
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border Style="{StaticResource CardCliente}">
+
+                                    <Grid
+                                        ColumnDefinitions="*,*,Auto"
+                                        RowDefinitions="*,Auto"
+                                        ColumnSpacing="10">
+
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Text="{Binding Nome}"
+                                            Style="{StaticResource TextoCardPrincipal}"
+                                            FontSize="16"
+                                            FontAttributes="Bold"
+                                            TextColor="#0F172A" />
+
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Text="{Binding Funcao}"
+                                            Style="{StaticResource TextoCardPrincipal}"
+                                            FontSize="14"
+                                            FontAttributes="Bold"
+                                            TextColor="#0F172A" />
+
+                                        <VerticalStackLayout Grid.Column="2" Spacing="4" VerticalOptions="Center">
+                                            <HorizontalStackLayout>
+                                                <Label Text="{Binding Ativo}" IsVisible="False" />
+
+                                                <Border WidthRequest="80" Style="{StaticResource BordaCampo}" Stroke="Black">
+                                                    <Button Text="Editar" Style="{StaticResource BotaoAzul}" Clicked="OnEditarFuncionarioClicked"/>
+                                                </Border>
+
+                                                <Border WidthRequest="95" Style="{StaticResource BordaCampo}" Stroke="Black" IsVisible="{Binding Ativo}">
+                                                    <Button Text="Desativar" Style="{StaticResource BotaoVermelho}" Clicked="OnAlterarStatusFuncionarioClicked"/>
+                                                </Border>
+
+                                                <Border WidthRequest="95" Style="{StaticResource BordaCampo}" Stroke="Black" IsVisible="{Binding Inativo}">
+                                                    <Button Text="Ativar" Style="{StaticResource BotaoImprimir}" Clicked="OnAlterarStatusFuncionarioClicked"/>
+                                                </Border>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                    </CollectionView>
+
+                </Grid>
+
+            </Border>
+
+        </Grid>
+
+        <Grid x:Name="GridModal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" IsVisible="False">
+            <BoxView Color="#99000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelarGridModal"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border 
+                x:Name="ModalFuncionarios"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12" x:Name="AddFuncionario">
+                    <Label x:Name="lTituloModalFuncionario" Text="Adicionar Funcionário"
+                           FontSize="20" FontAttributes="Bold" TextColor="#0F172A" />
+
+                    <Label Text="Nome" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eNome" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
+                    <Label Text="Função" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eFuncao" Style="{StaticResource EntryCampo}" />
+                    </Border>
+
+                    <Label Text="Documento" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eDocumento" Style="{StaticResource EntryCampo}">
+                            <Entry.Behaviors>
+                                <behaviors:MascaraBehavior Tipo="Cpf"/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </Border>
+
+                    <Label Text="Status" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Picker x:Name="pStatus" Style="{StaticResource PickerCampo}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Ativo</x:String>
+                                    <x:String>Inativo</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoImprimir}" Clicked="OnSalvarGridModal"/>
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -64,6 +64,10 @@
                     </Border>
 
                     <Border Style="{StaticResource BordaMenu}">
+                        <Button Text="Funcionários" Style="{StaticResource BotaoMenu}" Clicked="OnFuncionarioClicked" />
+                    </Border>
+
+                    <Border Style="{StaticResource BordaMenu}">
                         <Button Text="Sair" Style="{StaticResource BotaoMenu}" Clicked="OnSairClicked" />
                     </Border>
 
@@ -314,9 +318,9 @@
                                         <Border Style="{StaticResource CardCliente}">
 
                                             <Grid
-                                            ColumnDefinitions="*,*,Auto"
-                                            ColumnSpacing="10"
-                                            RowSpacing="5">
+                                                ColumnDefinitions="*,*,Auto"
+                                                ColumnSpacing="10"
+                                                RowSpacing="5">
 
                                                 <Label
                                                 Grid.Row="0"

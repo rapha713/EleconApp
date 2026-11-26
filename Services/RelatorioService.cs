@@ -135,7 +135,7 @@ namespace CadastroClientes.Services
             foreach (var cliente in clientes)
             {
                 var pecas = await _bancoLocal.ObterPecasAsync(cliente.OS);
-                dados.Add((cliente, pecas.ToList()));
+                dados.Add((cliente, pecas.Where(x => x.CodigoPeca != "0").ToList()));
             }
 
             await Task.Run(() =>
@@ -155,7 +155,7 @@ namespace CadastroClientes.Services
                 foreach (var (cliente, pecas) in dados)
                 {
                     if (!primeira)
-                        doc.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                        doc.Add(new Paragraph("").SetBorder(new SolidBorder(ColorConstants.BLACK, 1f)));
                     primeira = false;
 
                     AdicionarOs(doc, cliente, pecas, normal, negrito, ptBr);
@@ -191,9 +191,11 @@ namespace CadastroClientes.Services
 
             var cabecalho = new Table(UnitValue.CreatePercentArray(new float[] { 3, 2, 2 })).UseAllAvailableWidth();
 
+            string dataCliente = FormatarData(cliente.DtaRetirada);
+
             cabecalho.AddCell(Esq($"Nome: {cliente.Nome}", 9, normal));
             cabecalho.AddCell(Cen($"Telefone: {cliente.Telefone}", 9, normal));
-            cabecalho.AddCell(Dir($"{cliente.Andamento}", 9, normal));
+            cabecalho.AddCell(Dir($"{cliente.Andamento} - {dataCliente}", 9, normal));
 
             cabecalho.AddCell(Esq($"Aparelho: {cliente.MarcaAparelhoTexto}", 9, normal));
             cabecalho.AddCell(Cen($"Código: {cliente.Codigo}", 9, normal));
@@ -249,6 +251,7 @@ namespace CadastroClientes.Services
         {
             var pecas = await _bancoLocal.ObterPecasAsync(cliente.OS);
             var marcas = await _bancoLocal.ObterMarcasAsync();
+            var tecnico = await _bancoLocal.ObterNovosFuncionariosAsync(pecas.FirstOrDefault()?.Tecnico ?? 0);
             string marcaTexto = string.Join(" - ", marcas.Where(x => !string.IsNullOrWhiteSpace(x.Nome))
                 .OrderBy(x => x.Id).Take(5).Select(x => x.Nome));
 
@@ -263,7 +266,7 @@ namespace CadastroClientes.Services
                 AdicionarCabecalho(doc, caminho, cliente.OS, marcaTexto);
                 AdicionarDados(doc, caminho, cliente);
                 AdicionarPeças(doc, caminho, pecas, cliente);
-                AdicionarDadosTecnico(doc, caminho);
+                AdicionarDadosTecnico(doc, caminho, cliente, tecnico);
             });
 
             return caminho;
@@ -396,9 +399,9 @@ namespace CadastroClientes.Services
             doc.Add(dados);
         }
 
-        public void AdicionarPeças(Document doc, string caminho, IEnumerable<Peca> pecas, Cliente cliente, int linhasExtras = 7)
+        public void AdicionarPeças(Document doc, string caminho, IEnumerable<Peca> pecas, Cliente cliente)
         {
-            const float alturaLinha = 20;
+            const float alturaLinha = 15;
             var negrito = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
             var normal = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
             var ptBr = CultureInfo.GetCultureInfo("pt-BR");
@@ -407,12 +410,10 @@ namespace CadastroClientes.Services
                 .SetBorder(new SolidBorder(ColorConstants.BLACK, 1.5f));
 
             iText.Layout.Element.Cell Cabecalho(string texto) => new iText.Layout.Element.Cell().Add(new Paragraph(texto)
-                .SetFont(negrito).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                .SetMinHeight(alturaLinha).SetFont(negrito).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER).SetFontSize(11));
 
-            iText.Layout.Element.Cell Celula(string? texto) => new iText.Layout.Element.Cell()
-                    .SetMinHeight(alturaLinha).Add(new Paragraph(texto ?? string.Empty)
-                        .SetFont(normal)
-                        .SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT));
+            iText.Layout.Element.Cell Celula(string? texto) => new iText.Layout.Element.Cell().Add(new Paragraph(texto ?? string.Empty)
+                .SetMinHeight(alturaLinha).SetFont(normal).SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT).SetFontSize(9));
 
             tabela.AddHeaderCell(Cabecalho("QTDE"));
             tabela.AddHeaderCell(Cabecalho("PEÇA"));
@@ -421,22 +422,27 @@ namespace CadastroClientes.Services
 
             var lista = pecas.ToList();
 
-            decimal valorPecas = lista.Sum(p => p.Valor);
+            var pecasValor = lista.Where(x => x.CodigoPeca != "0");
+
+            decimal valorPecas = lista.Where(x => x.CodigoPeca != "0").Sum(p => p.Valor * p.Qtde);
             decimal maoDeObra = lista.Where(x => x.CodigoPeca == "0").Sum(m => m.Valor);
             decimal valorFinal = valorPecas + maoDeObra;
 
-            foreach (var p in lista.Where(x => x.CodigoPeca != "0"))
-            {
-                tabela.AddCell(Celula(p.Qtde.ToString()));
-                tabela.AddCell(Celula(p.Nome));
-                tabela.AddCell(Celula(p.CodigoPeca));
-                tabela.AddCell(Celula(p.Valor.ToString("C2", ptBr)));
-            }
+            const int linhasMinimas = 10;
+            var pecasCadastradas = lista.Where(x => x.CodigoPeca != "0").ToList();
+            int totalLinhas = Math.Max(linhasMinimas, pecasCadastradas.Count);
 
-            for (int i = 0; i < linhasExtras; i++)
+            for (int i = 0; i < totalLinhas; i++)
             {
-                for (int coluna = 0; coluna < 4; coluna++)
-                    tabela.AddCell(Celula(string.Empty));
+                var p = i < pecasCadastradas.Count ? pecasCadastradas[i] : null;
+
+                tabela.AddCell(Celula(p?.Qtde.ToString() ?? string.Empty));
+                tabela.AddCell(Celula(p?.Nome ?? string.Empty));
+                tabela.AddCell(Celula(p?.CodigoPeca ?? string.Empty));
+                if (p?.Qtde > 1 && p?.Qtde.ToString() != null)
+                    tabela.AddCell(Celula((p.Valor * p.Qtde).ToString("C2", ptBr)));
+                else
+                    tabela.AddCell(Celula(p?.Valor.ToString("C2", ptBr) ?? string.Empty));
             }
 
             doc.Add(tabela);
@@ -445,14 +451,28 @@ namespace CadastroClientes.Services
                 .SetFontSize(tamanho).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER).SetMargin(0);
 
             var divisoria = new SolidBorder(ColorConstants.BLACK, 1);
-
             var total = new Table(UnitValue.CreatePercentArray(new float[] { 3, 2 })).UseAllAvailableWidth().SetKeepTogether(true)
                 .SetBorder(new SolidBorder(ColorConstants.BLACK, 1.5f));
 
             var datas = new iText.Layout.Element.Cell().SetBorder(iText.Layout.Borders.Border.NO_BORDER)
-                .SetBorderRight(divisoria).SetPadding(6);
+                .SetBorderRight(divisoria).SetPadding(3);
 
-            datas.Add(Linha($"Data Aprovação: {cliente.DtaEmissao:dd/MM/yyyy}       Data Retirada: {cliente.DtaEmissao:dd/MM/yyyy}", 11));
+            var primeira = pecas.FirstOrDefault();
+            string txtData = "Data Aprovação: ";
+            string dataSelecionado = FormatarData(primeira?.DtaAprovacao);
+
+            if (cliente.Andamento == "Aprovado" || cliente.Andamento == "Entregue")
+            {
+                txtData = "Data Aprovação:";
+                dataSelecionado = FormatarData(primeira?.DtaAprovacao);
+            }
+            else if (cliente.Andamento == "Reprovado" || cliente.Andamento == "Entregue(Reprovado)")
+            {
+                txtData = "Data Reprovação:";
+                dataSelecionado = FormatarData(primeira?.DtaReprovacao);
+            }
+
+            datas.Add(Linha($"{txtData} {dataSelecionado}       Data Retirada: {FormatarData(cliente.DtaRetirada)}", 11));
 
             var direita = new iText.Layout.Element.Cell(2, 1).SetBorder(iText.Layout.Borders.Border.NO_BORDER)
                 .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE).SetPadding(6);
@@ -462,8 +482,8 @@ namespace CadastroClientes.Services
             direita.Add(Linha("Valor Mão de Obra", 11).SetMarginTop(6));
             direita.Add(Linha(maoDeObra.ToString("C2", ptBr), 11));
             direita.Add(new LineSeparator(new SolidLine(0.5f)).SetMarginTop(8).SetMarginBottom(8));
-            direita.Add(Linha("TOTAL ORÇAMENTO", 14).SetFontColor(new DeviceRgb(255, 0, 0)));
-            direita.Add(Linha(valorFinal.ToString("C2", ptBr), 14));
+            direita.Add(Linha("TOTAL ORÇAMENTO", 12).SetFontColor(new DeviceRgb(255, 0, 0)));
+            direita.Add(Linha(valorFinal.ToString("C2", ptBr), 12));
 
             var assinatura = new iText.Layout.Element.Cell().SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetBorderRight(divisoria)
                 .SetPaddingTop(6).SetPaddingBottom(6).SetPaddingLeft(30).SetPaddingRight(30)
@@ -479,7 +499,9 @@ namespace CadastroClientes.Services
             doc.Add(total);
         }
 
-        public void AdicionarDadosTecnico(Document doc, string caminho, int linhasObservacao = 4)
+        private static string FormatarData(DateTime? data) => data.HasValue && data.Value.Year > 1900 ? data.Value.ToString("dd/MM/yyyy") : "___/___/___";
+
+        public void AdicionarDadosTecnico(Document doc, string caminho, Cliente cliente, IEnumerable<Funcionarios> tecnico, int linhasObservacao = 4)
         {
             var negrito = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
 
@@ -495,15 +517,14 @@ namespace CadastroClientes.Services
                 .SetBorderRight(divisoria).SetPaddingTop(6).SetPaddingBottom(6).SetPaddingLeft(30).SetPaddingRight(30)
                 .SetMinHeight(60).SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.BOTTOM);
 
+            assinatura.Add(Linha(tecnico.FirstOrDefault()?.Nome ?? "", 11));
             assinatura.Add(new LineSeparator(new SolidLine(0.5f)));
             assinatura.Add(Linha("Técnico responsável", 11));
 
             var direita = new iText.Layout.Element.Cell().SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetPadding(6);
 
             direita.Add(Linha("Observações", 12).SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT));
-
-            for (int i = 0; i < linhasObservacao; i++)
-                direita.Add(new LineSeparator(new SolidLine(0.5f)).SetMarginTop(18));
+            direita.Add(Linha($"{cliente.Observacao}", 10).SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT));
 
             total.AddCell(assinatura);
             total.AddCell(direita);

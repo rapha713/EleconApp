@@ -17,6 +17,10 @@ namespace CadastroClientes
             Routing.RegisterRoute(nameof(EditarOsPage), typeof(EditarOsPage));
 
             Routing.RegisterRoute(nameof(ConfiguracaoPage), typeof(ConfiguracaoPage));
+
+            Routing.RegisterRoute(nameof(FuncionarioPage), typeof(FuncionarioPage));
+
+            Routing.RegisterRoute(nameof(TecnicoPage), typeof(TecnicoPage));
         }
     }
 }

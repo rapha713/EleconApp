@@ -82,6 +82,11 @@ public partial class ConfiguracaoPage : ContentPage
         await Shell.Current.GoToAsync(nameof(OrdemServicoPage));
     }
 
+    private async void OnFuncionarioClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(FuncionarioPage));
+    }
+
     private async void OnSairClicked(object sender, EventArgs e)
     {
         bool ok = await DisplayAlertAsync("Sair", "Deseja realmente fechar o programa?", "Sim", "Não");

@@ -32,12 +32,8 @@ public partial class OrdemServicoPage : ContentPage
     {
         base.OnAppearing();
 
+        await CarregarListasAsync();
         await ListaClienteAsync(online: false);
-
-        //bool online = await _sincronizacao.SincronizarAsync();
-
-        //if (online)
-        //    await ListaClienteAsync(online: true);
     }
 
     protected override void OnDisappearing()
@@ -124,6 +120,15 @@ public partial class OrdemServicoPage : ContentPage
         }
     }
 
+    private async Task CarregarListasAsync()
+    {
+        var cidades = await _bancoLocal.ObterLocalidadesAsync();
+        var aparelhos = await _bancoLocal.ObterAparelhosAsync();
+        var marcas = await _bancoLocal.ObterMarcasAsync();
+
+        ListasDados.Carregar(cidades, aparelhos, marcas);
+    }
+
     private async Task ListaClienteAsync(bool online)
     {
         try
@@ -133,9 +138,6 @@ public partial class OrdemServicoPage : ContentPage
             .ToList();
 
             AplicarFiltro();
-            //TotalClientesLabel.Text = clientes.Count.ToString();
-
-            //AtualizarResumoSincronizacao(online, clientes.Count(c => !c.Sincronizado));
         }
         catch (Exception ex)
         {
@@ -165,7 +167,13 @@ public partial class OrdemServicoPage : ContentPage
         }
 
         if (exibicao is null || exibicao == "Todos")
-            lista = lista.Where(c => c.Andamento != "Entregue");
+            lista = lista.Where(c => c.Andamento != "Entregue" && c.Andamento != "Entregue(Reprovado)");
+        else if (exibicao is null || exibicao == "Entregues")
+            lista = lista.Where(c => c.Andamento == "Entregue" || c.Andamento == "Entregue(Reprovado)");
+        else if (exibicao is null || exibicao == "Entregue Aprovadas")
+            lista = lista.Where(c => c.Andamento == "Entregue");
+        else if (exibicao is null || exibicao == "Entregue Reprovadas")
+            lista = lista.Where(c => c.Andamento == "Entregue(Reprovado)");
         else
             lista = lista.Where(c => string.Equals(c.Andamento, exibicao, cmp));
 
@@ -178,9 +186,21 @@ public partial class OrdemServicoPage : ContentPage
 
     private async void btnEditarClicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.BindingContext is Cliente cliente)
+        int perfil = 0;
+
+        if(perfil == 1)
         {
-            await Navigation.PushAsync(new EditarOsPage(cliente));
+            if (sender is Button button && button.BindingContext is Cliente cliente)
+            {
+                await Navigation.PushAsync(new TecnicoPage(cliente));
+            }
+        }
+        else
+        {
+            if (sender is Button button && button.BindingContext is Cliente cliente)
+            {
+                await Navigation.PushAsync(new EditarOsPage(cliente));
+            }
         }
     }
 
@@ -223,7 +243,7 @@ public partial class OrdemServicoPage : ContentPage
         {
             botao.IsEnabled = false;
 
-            string caminho = await _relatorioService.GerarOsFiltradaAsync(_clientesFiltrados);
+            string caminho = await _relatorioService.GerarOsFiltradaAsync(_clientesFiltrados.OrderBy(x => x.OS));
 
             await Launcher.Default.OpenAsync(
                 new OpenFileRequest("OS filtradas", new ReadOnlyFile(caminho)));

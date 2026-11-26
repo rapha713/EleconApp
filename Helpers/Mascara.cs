@@ -16,6 +16,7 @@ namespace CadastroClientes.Helpers
 
     public static class Mascara
     {
+        private const string PadraoCpf = "###.###.###-##";
         private const string PadraoTelefoneFixo = "(##) ####-####";
         private const string PadraoTelefoneCelular = "(##) #####-####";
         private const string PadraoData = "##/##/####";
@@ -31,6 +32,7 @@ namespace CadastroClientes.Helpers
 
             return tipo switch
             {
+                TipoMascara.Cpf => Padrao(PadraoCpf, d),
                 TipoMascara.Data => Padrao(PadraoData, d),
                 TipoMascara.Moeda => FormatarMoeda(d),
                 TipoMascara.CEP => Padrao(PadraoCEP, d),

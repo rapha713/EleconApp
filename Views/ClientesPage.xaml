@@ -68,6 +68,10 @@
                         <Button Text="Configurações" Style="{StaticResource BotaoMenu}" Clicked="OnConfiguracaoClicked" />
                     </Border>
 
+                    <Border Style="{StaticResource BordaMenu}" >
+                        <Button Text="Funcionários" Style="{StaticResource BotaoMenu}" Clicked="OnFuncionarioClicked" />
+                    </Border>
+
                     <Border Style="{StaticResource BordaMenu}">
                         <Button Text="Sair" Style="{StaticResource BotaoMenu}" Clicked="OnSairClicked" />
                     </Border>

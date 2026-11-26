@@ -60,7 +60,7 @@ public partial class ClientesPage : ContentPage
     {
         try
         {
-            var clientes = (await _bancoLocal.ObterClientesAsync()).Where(c => c.Andamento != "Entregue")
+            var clientes = (await _bancoLocal.ObterClientesAsync()).Where(c => c.Andamento != "Entregue" && c.Andamento != "Entregue(Reprovado)")
                 .OrderByDescending(c => c.DtaEmissao).ToList();
 
             cvClientes.ItemsSource = clientes;
@@ -163,6 +163,11 @@ public partial class ClientesPage : ContentPage
     private async void OnConfiguracaoClicked(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(ConfiguracaoPage));
+    }
+
+    private async void OnFuncionarioClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(FuncionarioPage));
     }
 
     private async void OnSairClicked(object sender, EventArgs e)

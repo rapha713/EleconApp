@@ -1,10 +1,12 @@
-namespace CadastroClientes.Views;
-
 using CadastroClientes.Data;
 using CadastroClientes.Helpers;
 using CadastroClientes.Models;
+using CadastroClientes.Services;
 using System.Collections.ObjectModel;
 using System.Globalization;
+
+namespace CadastroClientes.Views;
+
 public partial class EditarOsPage : ContentPage
 {
     private readonly Cliente _cliente;
@@ -12,17 +14,24 @@ public partial class EditarOsPage : ContentPage
     private readonly BancoLocal _bancoLocal = new();
     private Peca? _pecaNovaEditar;
     private Peca? _pecaParaExcluir;
+    private int _tipoData;
     private Dictionary<DatePicker, Entry> _paresData = null!;
+    private bool _preenchendo;
+    private readonly RelatorioService _relatorioService;
 
-    public EditarOsPage(Cliente cliente, Peca? peca = null, BancoLocal bancoLocal = null)
+    public EditarOsPage(Cliente cliente, RelatorioService? relatorioService = null, Peca? peca = null, BancoLocal bancoLocal = null)
 	{
 		InitializeComponent();
         _cliente = cliente;
         _bancoLocal = bancoLocal ?? new BancoLocal();
+        _relatorioService = relatorioService ?? new RelatorioService(_bancoLocal);
         _paresData = new()
         {
             [pCompra] = eCompra,
-            [pEmissao] = eEmissao
+            [pEmissao] = eEmissao,
+            [pDtaAprovacao] = eDtaAprovacao,
+            [pDtaReprovacao] = eDtaReprovacao,
+            [pEntregaData] = eEntregaData
         };
 
         pAparelho.ItemsSource = ListasDados.Aparelhos.ToList();
@@ -30,6 +39,13 @@ public partial class EditarOsPage : ContentPage
 
         pMarca.ItemsSource = ListasDados.Marcas.ToList();
         pMarca.ItemDisplayBinding = new Binding(nameof(ItemLista.Nome));
+
+        pDtaAprovacao.Date = DateTime.Today;
+        eDtaAprovacao.Text = DateTime.Today.ToString("dd/MM/yyyy");
+        pDtaReprovacao.Date = DateTime.Today;
+        eDtaReprovacao.Text = DateTime.Today.ToString("dd/MM/yyyy");
+        pEntregaData.Date = DateTime.Today;
+        eEntregaData.Text = DateTime.Today.ToString("dd/MM/yyyy");
 
         cvPecas.ItemsSource = _pecas;
         CarregarCampos();
@@ -41,10 +57,6 @@ public partial class EditarOsPage : ContentPage
 
         await ListaDadosAsync(online: false);
         await CarregarPecasAsync();
-        //bool online = await _sincronizacao.SincronizarAsync();
-
-        //if (online)
-        //    await ListaDadosAsync(online: true);
     }
 
     private async Task ListaDadosAsync(bool online)
@@ -63,44 +75,66 @@ public partial class EditarOsPage : ContentPage
 
     private void CarregarCampos()
     {
-        lblTitulo.Text = $"Ordem de Serviço {_cliente.OS}";
+        _preenchendo = true;
+        try
+        {
+            lblTitulo.Text = $"Ordem de Serviço {_cliente.OS}";
 
-        eOs.Text = _cliente.OS.ToString();
-        cbExterno.IsChecked = _cliente.Externo;
+            eOs.Text = _cliente.OS.ToString();
+            cbExterno.IsChecked = _cliente.Externo;
 
-        eNome.Text = _cliente.Nome;
-        eTelefone.Text = _cliente.Telefone;
-        eEmissao.Text = _cliente.DtaEmissao.ToString("dd/MM/yyyy");
+            eNome.Text = _cliente.Nome;
+            eTelefone.Text = _cliente.Telefone;
+            eEmissao.Text = _cliente.DtaEmissao.ToString("dd/MM/yyyy");
 
-        pAparelho.SelectedItem = ListasDados.Aparelhos.FirstOrDefault(a => a.Id == _cliente.Aparelho);
-        pMarca.SelectedItem = ListasDados.Marcas.FirstOrDefault(a => a.Id == _cliente.Marca);
-        eCodigo.Text = _cliente.Codigo;
-        eSerie.Text = _cliente.NroSerie;
-        cbGarantia.IsChecked = _cliente.Garantia;
+            pAparelho.SelectedItem = ListasDados.Aparelhos.FirstOrDefault(a => a.Id == _cliente.Aparelho);
+            pMarca.SelectedItem = ListasDados.Marcas.FirstOrDefault(a => a.Id == _cliente.Marca);
+            eCodigo.Text = _cliente.Codigo;
+            eSerie.Text = _cliente.NroSerie;
+            cbGarantia.IsChecked = _cliente.Garantia;
 
-        eDefeito.Text = _cliente.Defeito;
-        eCondAparelho.Text = _cliente.CondAparelho;
+            eDefeito.Text = _cliente.Defeito;
+            eCondAparelho.Text = _cliente.CondAparelho;
 
-        cbCabo.IsChecked = _cliente.CaboAc;
-        cbControle.IsChecked = _cliente.CR;
-        cbBase.IsChecked = _cliente.Base;
-        cbSuporte.IsChecked = _cliente.Suporte;
-        cbCaixaAc.IsChecked = _cliente.CaixaAcust;
-        eOutroAcess.Text = _cliente.Outros;
+            cbCabo.IsChecked = _cliente.CaboAc;
+            cbControle.IsChecked = _cliente.CR;
+            cbBase.IsChecked = _cliente.Base;
+            cbSuporte.IsChecked = _cliente.Suporte;
+            cbCaixaAc.IsChecked = _cliente.CaixaAcust;
+            eOutroAcess.Text = _cliente.Outros;
 
-        eRevenda.Text = _cliente.Revenda;
-        eNroNF.Text = _cliente.NroNf;
-        eCompra.Text = _cliente.DtaCompra.ToString("dd/MM/yyyy");
+            eRevenda.Text = _cliente.Revenda;
+            eNroNF.Text = _cliente.NroNf;
+            eCompra.Text = _cliente.DtaCompra.ToString("dd/MM/yyyy");
 
-        string[] fluxo = { "Vist. Técnico", "Aprovado", "Peça Solicitada", "Pronto", "Entregue" };
-        int atual = Array.IndexOf(fluxo, _cliente.Andamento);
+            string andamento = _cliente.Andamento ?? "";
 
-        cbTecnico.IsChecked = atual >= 0;
-        cbAprovado.IsChecked = atual >= 1;
-        cbSolicitado.IsChecked = atual >= 2;
-        cbPronto.IsChecked = atual >= 3;
-        cbEntregue.IsChecked = atual >= 4;
-        cbReprovado.IsChecked = _cliente.Andamento == "Reprovado";
+            if (andamento == "Entregue(Reprovado)")
+            {
+                cbTecnico.IsChecked = true;
+                cbAprovado.IsChecked = false;
+                cbSolicitado.IsChecked = false;
+                cbPronto.IsChecked = false;
+                cbReprovado.IsChecked = true;
+                cbEntregue.IsChecked = true;
+            }
+            else
+            {
+                string[] fluxo = { "Vist. Técnico", "Aprovado", "Peça Solicitada", "Pronto", "Entregue" };
+                int atual = Array.IndexOf(fluxo, andamento);
+
+                cbTecnico.IsChecked = atual >= 0;
+                cbAprovado.IsChecked = atual >= 1;
+                cbSolicitado.IsChecked = atual >= 2;
+                cbPronto.IsChecked = atual >= 3;
+                cbEntregue.IsChecked = atual >= 4;
+                cbReprovado.IsChecked = andamento == "Reprovado";
+            }
+        }
+        finally
+        {
+            _preenchendo = false;
+        }
     }
 
     private async void OnClickedSalvarOs(object sender, EventArgs e)
@@ -124,7 +158,6 @@ public partial class EditarOsPage : ContentPage
         string outroAcessorio = eOutroAcess.Text?.Trim() ?? string.Empty;
 
         string andamento =
-            cbEntregue.IsChecked ? "Entregue" :
             cbPronto.IsChecked ? "Pronto" :
             cbSolicitado.IsChecked ? "Peça Solicitada" :
             cbReprovado.IsChecked ? "Reprovado" :
@@ -140,7 +173,7 @@ public partial class EditarOsPage : ContentPage
             _cliente.Aparelho = ap.Id;
 
         if (pMarca.SelectedItem is ItemLista mc)
-            _cliente.Aparelho = mc.Id;
+            _cliente.Marca = mc.Id;
 
         _cliente.Codigo = eCodigo.Text?.Trim();
         _cliente.NroSerie = eSerie.Text?.Trim();
@@ -291,11 +324,6 @@ public partial class EditarOsPage : ContentPage
         GridNfModal.IsVisible = true;
     }
 
-    private void OnCancelarNfModal(object sender, EventArgs e)
-    {
-        GridNfModal.IsVisible = false;
-    }
-
     private void OnSalvarNfModal(object sender, EventArgs e)
     {
         _cliente.Revenda = eRevenda.Text;
@@ -306,10 +334,159 @@ public partial class EditarOsPage : ContentPage
     }
     #endregion
 
+    #region Datas
+    private void OnAprovarChk(object sender, CheckedChangedEventArgs e)
+    {
+        if (_preenchendo || !e.Value) return;
+
+        var peca = _pecaNovaEditar ?? new Peca { OS = _cliente.OS };
+        AbrirGridDatas(peca, 1);
+    }
+
+    private void OnReprovarChk(object sender, CheckedChangedEventArgs e)
+    {
+        if (_preenchendo || !e.Value) return;
+
+        var peca = _pecaNovaEditar ?? new Peca { OS = _cliente.OS };
+        AbrirGridDatas(peca, 2);
+    }
+
+    private void AbrirGridDatas(Peca? peca, int tipo)
+    {
+        _pecaNovaEditar = peca;
+
+        lblDatasDefinir.Text = tipo == 1 ? "Data Aprovação" : "Data Reprovação";
+
+        _tipoData = tipo;
+
+        GridDataModal.IsVisible = true;
+        ModalDatas.IsVisible = true;
+        if(tipo == 1)
+        {
+            bDtaAprovacao.IsVisible = true;
+            bDtaReprovacao.IsVisible = false;
+            eDtaAprovacao.Focus();
+        }
+        else
+        {
+            bDtaAprovacao.IsVisible = false;
+            bDtaReprovacao.IsVisible = true;
+            eDtaReprovacao.Focus();
+        }
+    }
+
+    private async void OnSalvarDatasModal(object sender, EventArgs e)
+    {
+        if (_cliente is null) return;
+
+        bool aprovacao = _tipoData == 1;
+        string nomeData = aprovacao ? "Aprovação" : "Reprovação";
+        string? texto = aprovacao ? eDtaAprovacao.Text : eDtaReprovacao.Text;
+
+        if (!DateTime.TryParse(texto, CultureInfo.GetCultureInfo("pt-BR"),
+                               DateTimeStyles.None, out var data))
+        {
+            await DisplayAlertAsync("Atenção", "Informe uma data válida (dd/MM/aaaa).", "OK");
+            return;
+        }
+
+        try
+        {
+            int alteradas = await _bancoLocal.AtualizarDatasPecasAsync(
+                _cliente.OS,
+                aprovacao ? data : null,
+                aprovacao ? null : data);
+
+            if (alteradas == 0)
+            {
+                await DisplayAlertAsync("Atenção", "Esta OS não tem peças para receber a data.", "OK");
+                return;
+            }
+
+            await DisplayAlertAsync("Sucesso", $"Data de {nomeData} definida.", "OK");
+            FecharGridModal();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Não foi possível salvar a data: {ex.Message}", "OK");
+        }
+    }
+    #endregion
+
+    #region Entregue
+    private void OnEntregueChk(object sender, CheckedChangedEventArgs e)
+    {
+        if (_preenchendo || !e.Value) return;
+
+        GridEntregaModal.IsVisible = true;
+    }
+
+    private async void OnSalvarEntregaModal(object sender, EventArgs e)
+    {
+        if (_cliente is null) return;
+
+        if (!DateTime.TryParse(eEntregaData.Text, CultureInfo.GetCultureInfo("pt-BR"),
+                               DateTimeStyles.None, out var data))
+        {
+            await DisplayAlertAsync("Atenção", "Informe uma data válida!", "OK");
+            return;
+        }
+
+        decimal valorPago = LerMoeda(eEntregaValor.Text);
+        if (eEntregaValor.Text == "" || eEntregaValor.Text == null)
+        {
+            await DisplayAlertAsync("Atenção", "Informe o valor pago!", "OK");
+            return;
+        }
+
+        string? forma = pEntregaPagamento.SelectedItem.ToString();
+        if(forma is null || forma == "")
+        {
+            await DisplayAlertAsync("Atenção", "Informe a forma do pagamento!", "OK");
+            return;
+        }
+
+
+        try
+        {
+            bool chkAprova = cbAprovado.IsChecked;
+
+            bool andamento = false;
+
+            if (chkAprova)
+                andamento = true;
+
+            int alteradas = await _bancoLocal.AtualizarEntregaAsync(_cliente.OS, data, valorPago, forma, andamento);
+
+            if (alteradas == 0)
+            {
+                await DisplayAlertAsync("Atenção", "Esta OS não tem peças para receber a data.", "OK");
+                return;
+            }
+
+            await DisplayAlertAsync("Sucesso", $"Aparelho entregue!", "OK");
+            FecharGridModal();
+            await Shell.Current.GoToAsync(nameof(OrdemServicoPage));
+
+            string caminho = await _relatorioService.GerarPdfOsAsync(_cliente);
+
+            await Launcher.Default.OpenAsync(
+                new OpenFileRequest($"OS {_cliente.OS}", new ReadOnlyFile(caminho)));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Erro", $"Não foi possível salvar a data: {ex.Message}", "OK");
+        }
+    }
+    #endregion
+
     #region Metodos Auxiliares
     private void FecharGridModal()
     {
         GridModal.IsVisible = false;
+        GridNfModal.IsVisible = false;
+        GridDataModal.IsVisible = false;
+        GridEntregaModal.IsVisible = false;
         _pecaNovaEditar = null;
     }
 
@@ -356,6 +533,11 @@ public partial class EditarOsPage : ContentPage
         {
             picker.Date = data;
         }
+    }
+
+    private void OnExibirSelecionado(object? sender, EventArgs e)
+    {
+        pEntregaPagamento.Title = pEntregaPagamento.SelectedIndex >= 0 ? string.Empty : "Escolha";
     }
     #endregion
 }

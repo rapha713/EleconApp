@@ -282,14 +282,14 @@
                     <VerticalStackLayout Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
                         <Label Text="Aprovado" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
-                            <CheckBox x:Name="cbAprovado" Color="YellowGreen" />
+                            <CheckBox x:Name="cbAprovado" Color="YellowGreen" CheckedChanged="OnAprovarChk" />
                         </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
                         <Label Text="Reprovado" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
-                            <CheckBox x:Name="cbReprovado" Color="YellowGreen" />
+                            <CheckBox x:Name="cbReprovado" Color="YellowGreen" CheckedChanged="OnReprovarChk" />
                         </Border>
                     </VerticalStackLayout>
 
@@ -310,7 +310,7 @@
                     <VerticalStackLayout Grid.Row="6" Grid.Column="6" Grid.ColumnSpan="1" Spacing="5" HorizontalOptions="Center">
                         <Label Text="Entregue" Style="{StaticResource LabelCampo}" />
                         <Border Style="{StaticResource BordaCampo}" WidthRequest="40" HorizontalOptions="Center">
-                            <CheckBox x:Name="cbEntregue" Color="YellowGreen" />
+                            <CheckBox x:Name="cbEntregue" Color="YellowGreen" CheckedChanged="OnEntregueChk" />
                         </Border>
                     </VerticalStackLayout>
 
@@ -414,7 +414,7 @@
         <Grid x:Name="GridNfModal" Grid.Row="0" Grid.RowSpan="2" IsVisible="False">
             <BoxView Color="#99000000">
                 <BoxView.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnCancelarNfModal" />
+                    <TapGestureRecognizer Tapped="OnCancelarGridModal" />
                 </BoxView.GestureRecognizers>
             </BoxView>
             
@@ -465,7 +465,159 @@
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
                         <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoAzul}" Clicked="OnSalvarNfModal" />
-                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarNfModal" />
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+        </Grid>
+
+        <Grid x:Name="GridDataModal" Grid.Row="0" Grid.RowSpan="2" IsVisible="False">
+            <BoxView Color="#99000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelarGridModal" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border 
+                x:Name="ModalDatas"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12" x:Name="DefinirDatas">
+                    <Label x:Name="lblDatasDefinir" Text="Data Aprovação" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#0F172A" />
+
+                    <Border x:Name="bDtaAprovacao" Style="{StaticResource BordaCampo}" IsVisible="False">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+
+                            <Entry x:Name="eDtaAprovacao" Style="{StaticResource EntryCampo}" Keyboard="Numeric" Placeholder="dd/mm/aaaa" 
+                                        TextChanged="OnDataTextChanged" Margin="0,0,0,0">
+                                <Entry.Behaviors>
+                                    <behaviors:MascaraBehavior Tipo="Data" />
+                                </Entry.Behaviors>
+                            </Entry>
+
+                            <Grid Grid.Column="1" WidthRequest="40" IsClippedToBounds="True">
+                                <Label x:Name="lblIconeDataAprovacao" Text="📅" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                <DatePicker x:Name="pDtaAprovacao" Opacity="0" DateSelected="OnDataSelecionada" />
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+
+                    <Border x:Name="bDtaReprovacao" Style="{StaticResource BordaCampo}" IsVisible="False">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+
+                            <Entry x:Name="eDtaReprovacao" Style="{StaticResource EntryCampo}" Keyboard="Numeric" Placeholder="dd/mm/aaaa" 
+                                   TextChanged="OnDataTextChanged" Margin="0,0,0,0">
+                                <Entry.Behaviors>
+                                    <behaviors:MascaraBehavior Tipo="Data" />
+                                </Entry.Behaviors>
+                            </Entry>
+
+                            <Grid Grid.Column="1" WidthRequest="40" IsClippedToBounds="True">
+                                <Label x:Name="lblIconeDataReprovacao" Text="📅" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                <DatePicker x:Name="pDtaReprovacao" Opacity="0" DateSelected="OnDataSelecionada" />
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoAzul}" Clicked="OnSalvarDatasModal" />
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+        </Grid>
+
+        <Grid x:Name="GridEntregaModal" Grid.Row="0" Grid.RowSpan="2" IsVisible="False">
+            <BoxView Color="#99000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelarGridModal" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border 
+                x:Name="ModalEntrega"
+                BackgroundColor="White"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="24"
+                WidthRequest="400"
+                MaximumWidthRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12" x:Name="DefinirValoresEntrega">
+                    <Label Text="Confirmar entrega" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#0F172A" />
+
+                    <Label Text="Forma de pagamento" TextColor="#475569" />
+                    <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource BordaCampo}">
+                        <Picker x:Name="pEntregaPagamento" 
+                            Style="{StaticResource PickerCampo}"
+                            Title="Escolha"
+                            TitleColor="#94A3B8"
+                            SelectedIndexChanged="OnExibirSelecionado">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Dinheiro</x:String>
+                                    <x:String>Débito</x:String>
+                                    <x:String>Crédito</x:String>
+                                    <x:String>PIX</x:String>
+                                    <x:String>Transferencia</x:String>
+                                    <x:String>Outro</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Border>
+
+                    <Label Text="Valor pago" TextColor="#475569" />
+                    <Border Style="{StaticResource BordaCampo}">
+                        <Entry x:Name="eEntregaValor" Style="{StaticResource EntryCampo}"
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <behaviors:MascaraBehavior Tipo="Moeda" />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </Border>
+
+                    <Label Text="Data da entrega" TextColor="#475569" />
+                    <Border x:Name="bEntrega" Style="{StaticResource BordaCampo}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+
+                            <Entry x:Name="eEntregaData" Style="{StaticResource EntryCampo}" Keyboard="Numeric" Placeholder="dd/mm/aaaa" 
+                                TextChanged="OnDataTextChanged" Margin="0,0,0,0">
+                                <Entry.Behaviors>
+                                    <behaviors:MascaraBehavior Tipo="Data" />
+                                </Entry.Behaviors>
+                            </Entry>
+
+                            <Grid Grid.Column="1" WidthRequest="40" IsClippedToBounds="True">
+                                <Label x:Name="lblIconeEntrega" Text="📅" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                                <DatePicker x:Name="pEntregaData" Opacity="0" DateSelected="OnDataSelecionada" />
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0" Text="Salvar" Style="{StaticResource BotaoAzul}" Clicked="OnSalvarEntregaModal" />
+                        <Button Grid.Column="1" Text="Cancelar" Style="{StaticResource BotaoVermelho}" Clicked="OnCancelarGridModal" />
                     </Grid>
 
                 </VerticalStackLayout>

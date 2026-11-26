@@ -126,7 +126,9 @@
                                 <x:String>Reprovado</x:String>
                                 <x:String>Peça Solicitada</x:String>
                                 <x:String>Pronto</x:String>
-                                <x:String>Entregue</x:String>
+                                <x:String>Entregues</x:String>
+                                <x:String>Entregue Aprovadas</x:String>
+                                <x:String>Entregue Reprovadas</x:String>
                             </x:Array>
                         </Picker.ItemsSource>
                     </Picker>

@@ -38,6 +38,10 @@ public class Cliente
     public string? Outros { get; set; }
     public bool Externo { get; set; }
     public string? Andamento { get; set; }
+    public string Observacao { get; set; } = string.Empty;
+    public DateTime DtaRetirada { get; set; }
+    public decimal ValorPago { get; set; }
+    public string FormaPagamento { get; set; } = string.Empty;
 
     [Ignore]
     public string AcessoriosTexto

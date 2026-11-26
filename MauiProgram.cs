@@ -29,8 +29,11 @@ namespace CadastroClientes
             builder.Services.AddSingleton<BancoLocal>();
             builder.Services.AddTransient<CadastroClientePage>();
             builder.Services.AddTransient<ClientesPage>();
-            builder.Services.AddTransient<OrdemServicoPage>();
+            builder.Services.AddTransient<ConfiguracaoPage>();
             builder.Services.AddTransient<EditarOsPage>();
+            builder.Services.AddTransient<FuncionarioPage>();
+            builder.Services.AddTransient<OrdemServicoPage>();
+            builder.Services.AddTransient<TecnicoPage>();
             //builder.Services.AddSingleton<SincronizacaoService>();
             builder.Services.AddSingleton<HttpClient>(serviceProvider =>
             {
